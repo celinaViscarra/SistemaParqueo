@@ -3,8 +3,8 @@ package com.grupo13.parqueo;
 public class Calificacion {
     float calificacion;
 
-    public Calificacion(float c){
-        this.calificacion=c;
+    public Calificacion(float calificacion) {
+        this.calificacion = calificacion;
     }
 
     public float getCalificacion() {

@@ -3,12 +3,12 @@ package com.grupo13.parqueo;
 import java.sql.Date;
 
 public class Imagen {
-    int idImagen;
-    Date fechaImagen;
+    private int idImagen;
+    private Date fechaImagen;
 
-    public Imagen(int id, Date fecha){
-        this.idImagen=id;
-        this.fechaImagen=fecha;
+    public Imagen(int idImagen, Date fechaImagen) {
+        this.idImagen = idImagen;
+        this.fechaImagen = fechaImagen;
     }
 
     public int getIdImagen() {

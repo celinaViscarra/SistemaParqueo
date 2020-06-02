@@ -1,12 +1,12 @@
 package com.grupo13.parqueo;
 
 public class Comentario {
-    int idComentario;
-    String texto;
+    private int idComentario;
+    private String texto;
 
-    public Comentario(int id, String t){
-        this.idComentario=id;
-        this.texto=t;
+    public Comentario(int idComentario, String texto) {
+        this.idComentario = idComentario;
+        this.texto = texto;
     }
 
     public int getIdComentario() {

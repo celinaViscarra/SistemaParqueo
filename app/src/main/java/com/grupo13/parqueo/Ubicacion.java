@@ -1,15 +1,15 @@
 package com.grupo13.parqueo;
 
 public class Ubicacion {
-    int idParqueo;
-    String nomParqueo;
-    float longitud, latitud;
+    private int idParqueo;
+    private String nomParqueo;
+    private float longitud, latitud;
 
-    public Ubicacion(int id, String nom, float lon, float lat){
-        this.idParqueo=id;
-        this.nomParqueo=nom;
-        this.longitud=lon;
-        this.latitud=lat;
+    public Ubicacion(int idParqueo, String nomParqueo, float longitud, float latitud) {
+        this.idParqueo = idParqueo;
+        this.nomParqueo = nomParqueo;
+        this.longitud = longitud;
+        this.latitud = latitud;
     }
 
     public int getIdParqueo() {

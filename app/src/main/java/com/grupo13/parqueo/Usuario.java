@@ -3,10 +3,10 @@ package com.grupo13.parqueo;
 public class Usuario {
     String usuario, contrasena, nombreUsuario;
 
-    public Usuario(String u, String c, String n){
-        this.usuario=u;
-        this.contrasena=c;
-        this.nombreUsuario=n;
+    public Usuario(String usuario, String contrasena, String nombreUsuario) {
+        this.usuario = usuario;
+        this.contrasena = contrasena;
+        this.nombreUsuario = nombreUsuario;
     }
 
     public String getUsuario() {

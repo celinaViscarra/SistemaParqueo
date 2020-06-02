@@ -1,14 +1,14 @@
 package com.grupo13.parqueo;
 
 public class Parqueo {
-    int idParqueo;
-    String nomParqueo;
-    boolean reservado;
+    private int idParqueo;
+    private String nomParqueo;
+    private boolean reservado;
 
-    public Parqueo(int id, String nom, boolean r){
-        this.idParqueo=id;
-        this.nomParqueo=nom;
-        this.reservado=r;
+    public Parqueo(int idParqueo, String nomParqueo, boolean reservado) {
+        this.idParqueo = idParqueo;
+        this.nomParqueo = nomParqueo;
+        this.reservado = reservado;
     }
 
     public int getIdParqueo() {
