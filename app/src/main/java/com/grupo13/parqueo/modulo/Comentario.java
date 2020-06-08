@@ -1,4 +1,4 @@
-package com.grupo13.parqueo;
+package com.grupo13.parqueo.modulo;
 
 public class Comentario {
     private int idComentario;
