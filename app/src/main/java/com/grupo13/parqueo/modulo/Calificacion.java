@@ -1,17 +1,45 @@
 package com.grupo13.parqueo.modulo;
 
+import androidx.annotation.NonNull;
+import androidx.room.Entity;
+import androidx.room.ForeignKey;
+import androidx.room.PrimaryKey;
+
+import static androidx.room.ForeignKey.CASCADE;
+
+@Entity
+        (foreignKeys = {
+                @ForeignKey(
+                        entity = Ubicacion.class,
+                        parentColumns = "id_ubicacion",
+                        childColumns = "id_ubicacion",
+                        onDelete = CASCADE
+                ),
+                @ForeignKey(
+                        entity = Usuario.class,
+                        parentColumns = "usuario",
+                        childColumns = "usuario",
+                        onDelete = CASCADE
+                        )
+        })
+
 public class Calificacion {
-    float calificacion;
+    @NonNull
+    @PrimaryKey(autoGenerate = true)
+    public int id_calificacion;
+    @NonNull
+    public int id_ubicacion;
+    @NonNull
+    public String usuario;
+    @NonNull
+    public float puntuacion;
 
-    public Calificacion(float calificacion) {
-        this.calificacion = calificacion;
-    }
+    public Calificacion(){}
 
-    public float getCalificacion() {
-        return calificacion;
-    }
-
-    public void setCalificacion(float calificacion) {
-        this.calificacion = calificacion;
+    public Calificacion(int id_calificacion, int id_ubicacion, String usuario, float puntuacion){
+        this.id_calificacion = id_calificacion;
+        this.id_ubicacion = id_ubicacion;
+        this.usuario = usuario;
+        this.puntuacion = puntuacion;
     }
 }

@@ -1,35 +1,22 @@
 package com.grupo13.parqueo.modulo;
 
+import androidx.annotation.NonNull;
+import androidx.room.Entity;
+
+@Entity
 public class Usuario {
-    String usuario, contrasena, nombreUsuario;
+    @NonNull
+    public String usuario;
+    @NonNull
+    public String contrasena;
+    @NonNull
+    public String nombre_usuario;
+
+    public Usuario(){}
 
     public Usuario(String usuario, String contrasena, String nombreUsuario) {
         this.usuario = usuario;
         this.contrasena = contrasena;
-        this.nombreUsuario = nombreUsuario;
-    }
-
-    public String getUsuario() {
-        return usuario;
-    }
-
-    public void setUsuario(String usuario) {
-        this.usuario = usuario;
-    }
-
-    public String getContrasena() {
-        return contrasena;
-    }
-
-    public void setContrasena(String contrasena) {
-        this.contrasena = contrasena;
-    }
-
-    public String getNombreUsuario() {
-        return nombreUsuario;
-    }
-
-    public void setNombreUsuario(String nombreUsuario) {
-        this.nombreUsuario = nombreUsuario;
+        this.nombre_usuario = nombreUsuario;
     }
 }
