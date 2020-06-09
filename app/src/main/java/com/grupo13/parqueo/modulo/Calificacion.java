@@ -27,6 +27,7 @@ public class Calificacion {
     @NonNull
     @PrimaryKey(autoGenerate = true)
     public int id_calificacion;
+
     @NonNull
     public int id_ubicacion;
     @NonNull

@@ -11,7 +11,7 @@ import androidx.room.PrimaryKey;
 public class Ubicacion {
     @NonNull
     @PrimaryKey(autoGenerate = true)
-    public int id_parqueo;
+    public int id_ubicacion;
     @NonNull
     public String nom_parqueo;
     @NonNull
@@ -21,8 +21,8 @@ public class Ubicacion {
 
     public Ubicacion(){}
 
-    public Ubicacion(int id_parqueo, String nom_parqueo, float longitud, float latitud){
-        this.id_parqueo = id_parqueo;
+    public Ubicacion(int id_ubicacion, String nom_parqueo, float longitud, float latitud){
+        this.id_ubicacion = id_ubicacion;
         this.nom_parqueo = nom_parqueo;
         this.longitud = longitud;
         this.latitud = latitud;
