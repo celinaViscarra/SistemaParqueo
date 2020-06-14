@@ -1,3 +1,7 @@
 <resources>
     <string name="app_name">SistemaParqueo</string>
+    <string name="logout">Cerrar Sesión</string>
+    <string name="saludo">Bienvenido/a</string>
+
+
 </resources>
