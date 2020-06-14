@@ -43,4 +43,6 @@ dependencies {
     annotationProcessor "android.arch.persistence.room:compiler:1.1.1"
     //Libreria para mejor manejo de la fecha
     implementation 'com.jakewharton.threetenabp:threetenabp:1.2.3'
+    //Dependencia Google Login
+    implementation 'com.google.android.gms:play-services-auth:18.0.0'
 }
