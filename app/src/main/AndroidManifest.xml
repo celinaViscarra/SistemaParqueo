@@ -28,7 +28,7 @@
         <!-- La api key para acceder a los mapas -->
         <meta-data
             android:name="com.google.android.geo.API_KEY"
-            android:value="AIzaSyBjhCUZJ0hSspfrOoEH7Q0Lh3VzXjH1MCc" />
+            android:value="AIzaSyDRmWh-4Wk49ItZWym5X9IdwPcAN4-LMBw" />
 
     </application>
 
