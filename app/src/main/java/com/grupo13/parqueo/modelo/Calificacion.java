@@ -1,4 +1,4 @@
-package com.grupo13.parqueo.modulo;
+package com.grupo13.parqueo.modelo;
 
 import androidx.annotation.NonNull;
 import androidx.room.Entity;
@@ -25,7 +25,8 @@ import static androidx.room.ForeignKey.CASCADE;
 
 public class Calificacion {
     @NonNull
-    @PrimaryKey(autoGenerate = true)
+    //Esta vez no vamos a dejar que se autogeneren.
+    @PrimaryKey
     public int id_calificacion;
 
     @NonNull

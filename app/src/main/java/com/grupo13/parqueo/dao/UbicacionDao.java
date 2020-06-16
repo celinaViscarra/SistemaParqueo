@@ -6,7 +6,7 @@ import androidx.room.Insert;
 import androidx.room.Query;
 import androidx.room.Update;
 
-import com.grupo13.parqueo.modulo.Ubicacion;
+import com.grupo13.parqueo.modelo.Ubicacion;
 
 import java.util.List;
 

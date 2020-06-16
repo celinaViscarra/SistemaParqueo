@@ -1,19 +1,16 @@
-package com.grupo13.parqueo.modulo;
+package com.grupo13.parqueo.modelo;
 
 import androidx.annotation.NonNull;
-import androidx.room.ColumnInfo;
 import androidx.room.Entity;
-import androidx.room.Ignore;
-import androidx.room.Index;
 import androidx.room.PrimaryKey;
 
 @Entity
 public class Ubicacion {
     @NonNull
-    @PrimaryKey(autoGenerate = true)
+    @PrimaryKey
     public int id_ubicacion;
     @NonNull
-    public String nom_parqueo;
+    public String nombre_ubicacion;
     @NonNull
     public float longitud;
     @NonNull
@@ -21,9 +18,9 @@ public class Ubicacion {
 
     public Ubicacion(){}
 
-    public Ubicacion(int id_ubicacion, String nom_parqueo, float longitud, float latitud){
+    public Ubicacion(int id_ubicacion, String nombre_ubicacion, float longitud, float latitud){
         this.id_ubicacion = id_ubicacion;
-        this.nom_parqueo = nom_parqueo;
+        this.nombre_ubicacion = nombre_ubicacion;
         this.longitud = longitud;
         this.latitud = latitud;
     }

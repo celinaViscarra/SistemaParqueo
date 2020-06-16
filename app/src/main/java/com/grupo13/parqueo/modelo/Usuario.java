@@ -1,4 +1,4 @@
-package com.grupo13.parqueo.modulo;
+package com.grupo13.parqueo.modelo;
 
 import androidx.annotation.NonNull;
 import androidx.room.Entity;

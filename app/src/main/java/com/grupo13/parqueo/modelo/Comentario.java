@@ -1,4 +1,4 @@
-package com.grupo13.parqueo.modulo;
+package com.grupo13.parqueo.modelo;
 
 import androidx.annotation.NonNull;
 import androidx.room.Entity;
@@ -24,7 +24,7 @@ import static androidx.room.ForeignKey.CASCADE;
 
 public class Comentario {
     @NonNull
-    @PrimaryKey(autoGenerate = true)
+    @PrimaryKey
     public int id_comentario;
     @NonNull
     public int id_ubicacion;
