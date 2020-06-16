@@ -13,13 +13,14 @@
         android:supportsRtl="true"
         android:theme="@style/AppTheme">
         <activity android:name=".LoginActivity">
+        </activity>
+        <activity android:name=".MainActivity">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
 
                 <category android:name="android.intent.category.LAUNCHER" />
             </intent-filter>
         </activity>
-        <activity android:name=".MainActivity"></activity>
 
         <meta-data
             android:name="com.google.android.gms.version"
@@ -28,7 +29,7 @@
         <!-- La api key para acceder a los mapas -->
         <meta-data
             android:name="com.google.android.geo.API_KEY"
-            android:value="AIzaSyBjhCUZJ0hSspfrOoEH7Q0Lh3VzXjH1MCc" />
+            android:value="AIzaSyDRmWh-4Wk49ItZWym5X9IdwPcAN4-LMBw" />
 
     </application>
 
