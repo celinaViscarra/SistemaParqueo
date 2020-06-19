@@ -5,6 +5,7 @@ import android.content.Context;
 import androidx.room.Database;
 import androidx.room.Room;
 import androidx.room.RoomDatabase;
+import androidx.room.TypeConverters;
 
 import com.grupo13.parqueo.dao.CalificacionDao;
 import com.grupo13.parqueo.dao.ComentarioDao;
@@ -13,6 +14,7 @@ import com.grupo13.parqueo.dao.UbicacionDao;
 import com.grupo13.parqueo.dao.UsuarioDao;
 import com.grupo13.parqueo.modelo.Calificacion;
 import com.grupo13.parqueo.modelo.Comentario;
+import com.grupo13.parqueo.modelo.ConversorFecha;
 import com.grupo13.parqueo.modelo.Imagen;
 import com.grupo13.parqueo.modelo.Parqueo;
 import com.grupo13.parqueo.modelo.Ubicacion;
@@ -26,6 +28,7 @@ import com.grupo13.parqueo.modelo.Usuario;
         Ubicacion.class,
         Usuario.class
 },exportSchema = false, version = 1)
+@TypeConverters({ConversorFecha.class})
 public abstract class ControlBD extends RoomDatabase {
     private static final String DB_NAME = "grupo13_parqueo.db";
     private static ControlBD instance;

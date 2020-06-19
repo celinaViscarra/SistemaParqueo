@@ -48,6 +48,7 @@ dependencies {
     //Mapa
     implementation 'com.google.android.gms:play-services-maps:17.0.0'
     implementation 'com.google.maps.android:android-maps-utils:0.5+'
+
     //SnackBar
     implementation "com.android.support:design:29.0.0"
     //Libreria floating action button

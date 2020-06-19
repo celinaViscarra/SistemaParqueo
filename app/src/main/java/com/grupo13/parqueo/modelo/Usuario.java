@@ -2,9 +2,11 @@ package com.grupo13.parqueo.modelo;
 
 import androidx.annotation.NonNull;
 import androidx.room.Entity;
+import androidx.room.PrimaryKey;
 
 @Entity
 public class Usuario {
+    @PrimaryKey
     @NonNull
     public String usuario;
     @NonNull
