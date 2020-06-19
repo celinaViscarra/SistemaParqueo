@@ -5,6 +5,8 @@ import androidx.room.Entity;
 import androidx.room.ForeignKey;
 import androidx.room.PrimaryKey;
 
+import com.google.gson.annotations.SerializedName;
+
 import static androidx.room.ForeignKey.CASCADE;
 
 @Entity
@@ -27,13 +29,17 @@ public class Calificacion {
     @NonNull
     //Esta vez no vamos a dejar que se autogeneren.
     @PrimaryKey
+    @SerializedName("id_calificacion")
     public int id_calificacion;
 
     @NonNull
+    @SerializedName("id_ubicacion")
     public int id_ubicacion;
     @NonNull
+    @SerializedName("usuario")
     public String usuario;
     @NonNull
+    @SerializedName("puntuacion")
     public float puntuacion;
 
     public Calificacion(){}
