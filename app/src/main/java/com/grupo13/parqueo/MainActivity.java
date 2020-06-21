@@ -9,6 +9,7 @@ import android.location.Location;
 import android.location.LocationListener;
 import android.location.LocationManager;
 import android.os.Bundle;
+import android.util.Log;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
@@ -30,13 +31,15 @@ import com.google.android.gms.maps.SupportMapFragment;
 import com.google.android.gms.maps.UiSettings;
 import com.google.android.gms.maps.model.CameraPosition;
 import com.google.android.gms.maps.model.LatLng;
+import com.google.android.gms.maps.model.Marker;
 import com.google.android.gms.maps.model.MarkerOptions;
 import com.google.android.gms.tasks.OnCompleteListener;
 import com.google.android.gms.tasks.Task;
 import com.google.android.material.snackbar.Snackbar;
+import com.grupo13.parqueo.utilidades.GPSTracker;
 import com.grupo13.parqueo.utilidades.PermisoService;
 
-public class MainActivity extends AppCompatActivity implements OnMapReadyCallback {
+public class MainActivity extends AppCompatActivity implements OnMapReadyCallback, GoogleMap.OnMarkerClickListener {
 
     private GoogleMap mMap;
     private GoogleSignInClient mGoogleSignInClient;
@@ -85,27 +88,16 @@ public class MainActivity extends AppCompatActivity implements OnMapReadyCallbac
         //mMap.moveCamera(CameraUpdateFactory.newLatLng(sydney));
 
         if (ActivityCompat.checkSelfPermission(this, Manifest.permission.ACCESS_FINE_LOCATION) != PackageManager.PERMISSION_GRANTED && ActivityCompat.checkSelfPermission(this, Manifest.permission.ACCESS_COARSE_LOCATION) != PackageManager.PERMISSION_GRANTED) {
-            // TODO: Consider calling
-            //    ActivityCompat#requestPermissions
-            // here to request the missing permissions, and then overriding
-            //   public void onRequestPermissionsResult(int requestCode, String[] permissions,
-            //                                          int[] grantResults)
-            // to handle the case where the user grants the permission. See the documentation
-            // for ActivityCompat#requestPermissions for more details.
             return;
         }
         //Esto activa el gps
         mMap.setMyLocationEnabled(true);
-        //Esto es para traerse la localizacion actual en el mapa.
-        Criteria cri= new Criteria();
-        String bbb = locationManager.getBestProvider(cri, true);
-        Location myLocation = locationManager.getLastKnownLocation(bbb);
-
-        double lat= myLocation.getLatitude();
-        double longi = myLocation.getLongitude();
-        LatLng ll = new LatLng(lat, longi);
-
+        GPSTracker tracker = new GPSTracker(MainActivity.this);
+        //Log.v("coordenadas",String.format("Latitud %.2f Longitud %.2f",tracker.getLatitude(),tracker.getLongitude()));
+        LatLng ll = new LatLng(tracker.getLatitude(), tracker.getLongitude());
         mMap.moveCamera(CameraUpdateFactory.newLatLngZoom(ll, 17));
+        mMap.setOnMarkerClickListener(this);
+
         //Dejo esto por si queremos cambiar automaticamente la localizacion.
         /*mMap.setOnMyLocationChangeListener(new GoogleMap.OnMyLocationChangeListener() {
             @Override
@@ -137,6 +129,11 @@ public class MainActivity extends AppCompatActivity implements OnMapReadyCallbac
                 cerrarSesion();
                 break;
         }
+        return true;
+    }
+    @Override
+    public boolean onMarkerClick(final Marker marker) {
+        Toast.makeText(this,marker.getTitle(),Toast.LENGTH_SHORT).show();
         return true;
     }
 
