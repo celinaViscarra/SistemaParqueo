@@ -19,6 +19,17 @@ import androidx.annotation.NonNull;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.core.app.ActivityCompat;
 
+import com.android.volley.Cache;
+import com.android.volley.Network;
+import com.android.volley.Request;
+import com.android.volley.RequestQueue;
+import com.android.volley.Response;
+import com.android.volley.VolleyError;
+import com.android.volley.toolbox.BasicNetwork;
+import com.android.volley.toolbox.DiskBasedCache;
+import com.android.volley.toolbox.HurlStack;
+import com.android.volley.toolbox.JsonObjectRequest;
+import com.android.volley.toolbox.StringRequest;
 import com.google.android.gms.auth.api.signin.GoogleSignIn;
 import com.google.android.gms.auth.api.signin.GoogleSignInAccount;
 import com.google.android.gms.auth.api.signin.GoogleSignInClient;
@@ -36,12 +47,21 @@ import com.google.android.gms.maps.model.MarkerOptions;
 import com.google.android.gms.tasks.OnCompleteListener;
 import com.google.android.gms.tasks.Task;
 import com.google.android.material.snackbar.Snackbar;
+import com.google.gson.Gson;
+import com.google.gson.reflect.TypeToken;
+import com.grupo13.parqueo.modelo.Ubicacion;
 import com.grupo13.parqueo.utilidades.GPSTracker;
 import com.grupo13.parqueo.utilidades.PermisoService;
+
+import org.json.JSONObject;
+
+import java.lang.reflect.Type;
+import java.util.List;
 
 public class MainActivity extends AppCompatActivity implements OnMapReadyCallback, GoogleMap.OnMarkerClickListener {
 
     private GoogleMap mMap;
+    RequestQueue requestQueue;
     private GoogleSignInClient mGoogleSignInClient;
     Location localizacion;
     LocationManager locationManager;
@@ -66,6 +86,14 @@ public class MainActivity extends AppCompatActivity implements OnMapReadyCallbac
         locationManager = (LocationManager)
                 this.getSystemService(Context.LOCATION_SERVICE);
 
+        //Instanciar el cache
+        Cache cache = new DiskBasedCache(getCacheDir(), 1024 * 1024); // 1MB cap
+        //COnfigurar la red para que use HttpURLConnection como el cliente HTTP
+        Network network = new BasicNetwork(new HurlStack());
+        //Instanciar RequestQueue con el cache y la red
+        requestQueue = new RequestQueue(cache, network);
+        //Iniciar la cola
+        requestQueue.start();
     }
 
 
@@ -110,6 +138,7 @@ public class MainActivity extends AppCompatActivity implements OnMapReadyCallbac
 
             }
         });*/
+        cargarUbicaciones();
     }
 
 
@@ -136,7 +165,29 @@ public class MainActivity extends AppCompatActivity implements OnMapReadyCallbac
         Toast.makeText(this,marker.getTitle(),Toast.LENGTH_SHORT).show();
         return true;
     }
-
+    public void cargarUbicaciones(){
+        String url = "http://192.168.0.22/SistemaParqueoWS/index.php/api/ubicacion";
+        StringRequest stringRequest = new StringRequest(Request.Method.GET, url,
+                new Response.Listener<String>() {
+                    @Override
+                    public void onResponse(String response) {
+                        Gson gson = new Gson();
+                        Type listType = new TypeToken<List<Ubicacion>>(){}.getType();
+                        List<Ubicacion> ubicaciones = gson.fromJson(response, listType);
+                        for(Ubicacion pivote: ubicaciones){
+                            mMap.addMarker(new MarkerOptions()
+                                    .position(new LatLng(pivote.latitud,pivote.longitud))
+                                    .title(pivote.nombre_ubicacion));
+                        }
+                    }
+                }, new Response.ErrorListener() {
+            @Override
+            public void onErrorResponse(VolleyError error) {
+                Log.e("Error",error.getMessage());
+            }
+        });
+        requestQueue.add(stringRequest);
+    }
     public void cerrarSesion() {
         mGoogleSignInClient.signOut()
                 .addOnCompleteListener(this, new OnCompleteListener<Void>() {
