@@ -1,8 +1,8 @@
 <?xml version="1.0" encoding="utf-8"?>
 <androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
-    xmlns:tools="http://schemas.android.com/tools"
     xmlns:fab="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     tools:context=".MainActivity">
@@ -14,8 +14,10 @@
         android:layout_height="match_parent"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintHorizontal_bias="0.0"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent"
+        app:layout_constraintVertical_bias="1.0"
         tools:context=".MapsActivity" />
 
     <com.github.clans.fab.FloatingActionMenu
@@ -36,15 +38,21 @@
             app:fab_colorPressed="@color/colorAccent"
             fab:fab_label="GPS"
             fab:fab_size="mini" />
-
-        <com.github.clans.fab.FloatingActionButton
-            android:id="@+id/fabBusqueda"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:onClick="modoBusqueda"
-            android:src="@drawable/common_google_signin_btn_icon_dark"
-            fab:fab_label="Buscar con filtro"
-            fab:fab_size="mini" />
     </com.github.clans.fab.FloatingActionMenu>
+    <!-- Le he dado una distancia de 200dp al swipe refresh para
+         que no se tome por completo el movimiento del mapa-->
+    <androidx.swiperefreshlayout.widget.SwipeRefreshLayout
+        android:id="@+id/swiperefresh"
+        android:layout_width="match_parent"
+        android:layout_height="200dp"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent">
 
+        <ImageView
+            android:id="@+id/imgTransparente"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:onClick="algo"
+            android:src="@color/transparent" />
+    </androidx.swiperefreshlayout.widget.SwipeRefreshLayout>
 </androidx.constraintlayout.widget.ConstraintLayout>

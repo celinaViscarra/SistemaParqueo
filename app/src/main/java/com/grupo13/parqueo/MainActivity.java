@@ -1,46 +1,47 @@
 package com.grupo13.parqueo;
 
 import android.Manifest;
+import android.annotation.SuppressLint;
+import android.app.SearchManager;
 import android.content.Context;
 import android.content.Intent;
 import android.content.pm.PackageManager;
-import android.location.Criteria;
 import android.location.Location;
-import android.location.LocationListener;
 import android.location.LocationManager;
 import android.os.Bundle;
 import android.util.Log;
+import android.util.TypedValue;
 import android.view.Menu;
+import android.view.MenuInflater;
 import android.view.MenuItem;
 import android.view.View;
+import android.widget.ImageView;
+import android.widget.RelativeLayout;
+import android.widget.SearchView;
 import android.widget.Toast;
 
 import androidx.annotation.NonNull;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.core.app.ActivityCompat;
+import androidx.swiperefreshlayout.widget.SwipeRefreshLayout;
 
 import com.android.volley.Cache;
 import com.android.volley.Network;
 import com.android.volley.Request;
 import com.android.volley.RequestQueue;
-import com.android.volley.Response;
-import com.android.volley.VolleyError;
 import com.android.volley.toolbox.BasicNetwork;
 import com.android.volley.toolbox.DiskBasedCache;
 import com.android.volley.toolbox.HurlStack;
-import com.android.volley.toolbox.JsonObjectRequest;
 import com.android.volley.toolbox.StringRequest;
 import com.google.android.gms.auth.api.signin.GoogleSignIn;
 import com.google.android.gms.auth.api.signin.GoogleSignInAccount;
 import com.google.android.gms.auth.api.signin.GoogleSignInClient;
 import com.google.android.gms.auth.api.signin.GoogleSignInOptions;
-import com.google.android.gms.maps.CameraUpdate;
 import com.google.android.gms.maps.CameraUpdateFactory;
 import com.google.android.gms.maps.GoogleMap;
 import com.google.android.gms.maps.OnMapReadyCallback;
 import com.google.android.gms.maps.SupportMapFragment;
 import com.google.android.gms.maps.UiSettings;
-import com.google.android.gms.maps.model.CameraPosition;
 import com.google.android.gms.maps.model.LatLng;
 import com.google.android.gms.maps.model.Marker;
 import com.google.android.gms.maps.model.MarkerOptions;
@@ -53,28 +54,36 @@ import com.grupo13.parqueo.modelo.Ubicacion;
 import com.grupo13.parqueo.utilidades.GPSTracker;
 import com.grupo13.parqueo.utilidades.PermisoService;
 
-import org.json.JSONObject;
-
 import java.lang.reflect.Type;
 import java.util.List;
 
-public class MainActivity extends AppCompatActivity implements OnMapReadyCallback, GoogleMap.OnMarkerClickListener {
+import butterknife.BindView;
+import butterknife.ButterKnife;
+
+public class MainActivity extends AppCompatActivity implements OnMapReadyCallback, GoogleMap.OnMarkerClickListener, SearchView.OnQueryTextListener {
 
     private GoogleMap mMap;
+    private MenuItem searchMenuItem;
+    private SearchView searchView;
     RequestQueue requestQueue;
     private GoogleSignInClient mGoogleSignInClient;
     Location localizacion;
     LocationManager locationManager;
+    @BindView(R.id.swiperefresh)
+    SwipeRefreshLayout swipeRefresh;
+    SupportMapFragment mapFragment;
+
+    String urlUbicaciones = "http://192.168.0.22/SistemaParqueoWS/index.php/api/ubicacion";
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
         PermisoService.verificarPermiso(this);
-        SupportMapFragment mapFragment = (SupportMapFragment) getSupportFragmentManager()
+        mapFragment = (SupportMapFragment) getSupportFragmentManager()
                 .findFragmentById(R.id.map);
         mapFragment.getMapAsync(this);
-
-        /*// Usuario actualmente logueado
+        ButterKnife.bind(this);
+        // Usuario actualmente logueado
         GoogleSignInOptions gso = new GoogleSignInOptions.Builder(GoogleSignInOptions.DEFAULT_SIGN_IN)
                 .requestEmail()
                 .build();
@@ -82,7 +91,7 @@ public class MainActivity extends AppCompatActivity implements OnMapReadyCallbac
         GoogleSignInAccount account = GoogleSignIn.getLastSignedInAccount(this);
 
         Snackbar.make(mapFragment.getView(), getString(R.string.saludo) + " " + account.getDisplayName(), Snackbar.LENGTH_SHORT).show();
-        */
+
         locationManager = (LocationManager)
                 this.getSystemService(Context.LOCATION_SERVICE);
 
@@ -94,8 +103,17 @@ public class MainActivity extends AppCompatActivity implements OnMapReadyCallbac
         requestQueue = new RequestQueue(cache, network);
         //Iniciar la cola
         requestQueue.start();
-    }
 
+        swipeRefresh.setOnRefreshListener(new SwipeRefreshLayout.OnRefreshListener() {
+            @Override
+            public void onRefresh() {
+                //Aqui hacemos la magia del swipe refresh xd
+
+                cargarUbicaciones();
+                swipeRefresh.setRefreshing(false);
+            }
+        });
+    }
 
     @Override
     public void onMapReady(GoogleMap googleMap) {
@@ -121,10 +139,8 @@ public class MainActivity extends AppCompatActivity implements OnMapReadyCallbac
         //Esto activa el gps
         mMap.setMyLocationEnabled(true);
         GPSTracker tracker = new GPSTracker(MainActivity.this);
-        //Log.v("coordenadas",String.format("Latitud %.2f Longitud %.2f",tracker.getLatitude(),tracker.getLongitude()));
         LatLng ll = new LatLng(tracker.getLatitude(), tracker.getLongitude());
         mMap.moveCamera(CameraUpdateFactory.newLatLngZoom(ll, 17));
-        mMap.setOnMarkerClickListener(this);
 
         //Dejo esto por si queremos cambiar automaticamente la localizacion.
         /*mMap.setOnMyLocationChangeListener(new GoogleMap.OnMyLocationChangeListener() {
@@ -139,13 +155,39 @@ public class MainActivity extends AppCompatActivity implements OnMapReadyCallbac
             }
         });*/
         cargarUbicaciones();
+        //Esta parte es para mover los botones xxd
+        @SuppressLint("ResourceType") View zoomControls = mapFragment.getView().findViewById(0x1);
+
+        if (zoomControls != null && zoomControls.getLayoutParams() instanceof RelativeLayout.LayoutParams) {
+            // ZoomControl is inside of RelativeLayout
+            RelativeLayout.LayoutParams params_zoom = (RelativeLayout.LayoutParams) zoomControls.getLayoutParams();
+
+            // Align it to - parent top|left
+            params_zoom.addRule(RelativeLayout.ALIGN_PARENT_END, 0);
+            params_zoom.addRule(RelativeLayout.ALIGN_END, 0);
+            params_zoom.addRule(RelativeLayout.ALIGN_PARENT_LEFT);
+            params_zoom.setMargins(40, 0, 20, 40);
+
+            // Update margins, set to 10dp
+            final int margin = (int) TypedValue.applyDimension(TypedValue.COMPLEX_UNIT_DIP, 30,
+                    getResources().getDisplayMetrics());
+            params_zoom.setMargins(margin, margin, margin, margin);
+
+        }
+
     }
-
-
 
     @Override
     public boolean onCreateOptionsMenu(Menu menu) {
-        getMenuInflater().inflate(R.menu.menu_desplegable, menu);
+        MenuInflater inflater = getMenuInflater();
+        inflater.inflate(R.menu.menu_desplegable, menu);
+        SearchManager searchManager = (SearchManager) getSystemService(Context.SEARCH_SERVICE);
+        searchMenuItem = menu.findItem(R.id.busqueda);
+        searchView = (SearchView) searchMenuItem.getActionView();
+        searchView.setSearchableInfo(searchManager.getSearchableInfo(getComponentName()));
+        searchView.setSubmitButtonEnabled(true);
+        searchView.setOnQueryTextListener(this);
+
         return true;
     }
 
@@ -166,26 +208,22 @@ public class MainActivity extends AppCompatActivity implements OnMapReadyCallbac
         return true;
     }
     public void cargarUbicaciones(){
-        String url = "http://192.168.0.22/SistemaParqueoWS/index.php/api/ubicacion";
-        StringRequest stringRequest = new StringRequest(Request.Method.GET, url,
-                new Response.Listener<String>() {
-                    @Override
-                    public void onResponse(String response) {
-                        Gson gson = new Gson();
-                        Type listType = new TypeToken<List<Ubicacion>>(){}.getType();
-                        List<Ubicacion> ubicaciones = gson.fromJson(response, listType);
-                        for(Ubicacion pivote: ubicaciones){
-                            mMap.addMarker(new MarkerOptions()
-                                    .position(new LatLng(pivote.latitud,pivote.longitud))
-                                    .title(pivote.nombre_ubicacion));
-                        }
+        StringRequest stringRequest = new StringRequest(
+                Request.Method.GET,
+                urlUbicaciones,
+                response -> {
+                    Gson gson = new Gson();
+                    Type listType = new TypeToken<List<Ubicacion>>(){}.getType();
+                    List<Ubicacion> ubicaciones = gson.fromJson(response, listType);
+                    for(Ubicacion pivote: ubicaciones){
+                        mMap.addMarker(new MarkerOptions()
+                                .position(new LatLng(pivote.latitud,pivote.longitud))
+                                .title(pivote.nombre_ubicacion));
+                        Log.v("Agregado: ",pivote.nombre_ubicacion);
                     }
-                }, new Response.ErrorListener() {
-            @Override
-            public void onErrorResponse(VolleyError error) {
-                Log.e("Error",error.getMessage());
-            }
-        });
+                },
+                error -> Log.e("Error",error.getMessage())
+        );
         requestQueue.add(stringRequest);
     }
     public void cerrarSesion() {
@@ -199,4 +237,14 @@ public class MainActivity extends AppCompatActivity implements OnMapReadyCallbac
                 });
     }
 
+    @Override
+    public boolean onQueryTextSubmit(String query) {
+        Toast.makeText(this, query,Toast.LENGTH_SHORT).show();
+        return false;
+    }
+
+    @Override
+    public boolean onQueryTextChange(String newText) {
+        return false;
+    }
 }
