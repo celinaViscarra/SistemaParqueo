@@ -43,6 +43,7 @@ public class ControlWS {
         requestQueue.start();
         helper.vaciarBD();
         //TODO: Agregarle una forma de revisar si tiene internet.
+        //Si, se pudo hacer mas corto este proceso pero no tenia ganas :v
         //Cargamos la lista de ubicaciones
         StringRequest requestUbicaciones = new StringRequest(
                 Request.Method.GET,
