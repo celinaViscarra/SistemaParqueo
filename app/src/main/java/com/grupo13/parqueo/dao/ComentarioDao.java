@@ -19,7 +19,10 @@ public interface ComentarioDao {
     Comentario consultarComentario(int id_comentario);
 
     @Insert
-    long insertarComentario(Comentario id_comentario);
+    long insertarComentario(Comentario comentario);
+
+    @Insert
+    void insertarComentarios(List<Comentario> comentarios);
 
     @Update
     int actualizarComentario(Comentario id_comentario);

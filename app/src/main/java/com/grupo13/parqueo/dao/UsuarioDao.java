@@ -21,6 +21,8 @@ public interface UsuarioDao {
     @Insert
     long insertarUsuario(Usuario usuario);
 
+    @Insert
+    void insertarUsuarios(List<Usuario> usuarios);
     @Update
     int actualizarUsuario(Usuario usuario);
 

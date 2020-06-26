@@ -72,8 +72,8 @@ public class MainActivity extends AppCompatActivity implements OnMapReadyCallbac
     @BindView(R.id.swiperefresh)
     SwipeRefreshLayout swipeRefresh;
     SupportMapFragment mapFragment;
+    ControlBD helper;
 
-    String urlUbicaciones = "http://192.168.0.22/SistemaParqueoWS/index.php/api/ubicacion";
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -83,6 +83,7 @@ public class MainActivity extends AppCompatActivity implements OnMapReadyCallbac
                 .findFragmentById(R.id.map);
         mapFragment.getMapAsync(this);
         ButterKnife.bind(this);
+        helper = ControlBD.getInstance(this);
         // Usuario actualmente logueado
         GoogleSignInOptions gso = new GoogleSignInOptions.Builder(GoogleSignInOptions.DEFAULT_SIGN_IN)
                 .requestEmail()
@@ -95,20 +96,11 @@ public class MainActivity extends AppCompatActivity implements OnMapReadyCallbac
         locationManager = (LocationManager)
                 this.getSystemService(Context.LOCATION_SERVICE);
 
-        //Instanciar el cache
-        Cache cache = new DiskBasedCache(getCacheDir(), 1024 * 1024); // 1MB cap
-        //COnfigurar la red para que use HttpURLConnection como el cliente HTTP
-        Network network = new BasicNetwork(new HurlStack());
-        //Instanciar RequestQueue con el cache y la red
-        requestQueue = new RequestQueue(cache, network);
-        //Iniciar la cola
-        requestQueue.start();
-
         swipeRefresh.setOnRefreshListener(new SwipeRefreshLayout.OnRefreshListener() {
             @Override
             public void onRefresh() {
                 //Aqui hacemos la magia del swipe refresh xd
-
+                ControlWS.traerDatos(getApplicationContext());
                 cargarUbicaciones();
                 swipeRefresh.setRefreshing(false);
             }
@@ -208,23 +200,13 @@ public class MainActivity extends AppCompatActivity implements OnMapReadyCallbac
         return true;
     }
     public void cargarUbicaciones(){
-        StringRequest stringRequest = new StringRequest(
-                Request.Method.GET,
-                urlUbicaciones,
-                response -> {
-                    Gson gson = new Gson();
-                    Type listType = new TypeToken<List<Ubicacion>>(){}.getType();
-                    List<Ubicacion> ubicaciones = gson.fromJson(response, listType);
-                    for(Ubicacion pivote: ubicaciones){
-                        mMap.addMarker(new MarkerOptions()
-                                .position(new LatLng(pivote.latitud,pivote.longitud))
-                                .title(pivote.nombre_ubicacion));
-                        Log.v("Agregado: ",pivote.nombre_ubicacion);
-                    }
-                },
-                error -> Log.e("Error",error.getMessage())
-        );
-        requestQueue.add(stringRequest);
+        List<Ubicacion> ubicaciones = helper.ubicacionDao().obtenerUbicaciones();
+        for(Ubicacion pivote: ubicaciones){
+            mMap.addMarker(new MarkerOptions()
+                    .position(new LatLng(pivote.latitud,pivote.longitud))
+                    .title(pivote.nombre_ubicacion));
+            Log.v("Agregado: ",pivote.nombre_ubicacion);
+        }
     }
     public void cerrarSesion() {
         mGoogleSignInClient.signOut()

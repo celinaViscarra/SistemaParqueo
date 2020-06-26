@@ -19,7 +19,10 @@ public interface CalificacionDao {
     Calificacion consultarCalificacion(int id_calificacion);
 
     @Insert
-    long insertarCalificacion(Calificacion id_calificacion);
+    long insertarCalificacion(Calificacion calificacion);
+
+    @Insert
+    void insertarCalificaciones(List<Calificacion> calificaciones);
 
     @Update
     int actualizarCalificacion(Calificacion id_parqueo);

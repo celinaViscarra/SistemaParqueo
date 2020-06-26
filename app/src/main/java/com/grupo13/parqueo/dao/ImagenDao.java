@@ -19,7 +19,10 @@ public interface ImagenDao {
     Imagen consultarImagen(int id_imagen);
 
     @Insert
-    long insertarImagen(Imagen id_imagen);
+    long insertarImagen(Imagen imagen);
+
+    @Insert
+    void insertarImagenes(List<Imagen> imagenes);
 
     @Update
     int actualizarImagen(Imagen id_imagen);

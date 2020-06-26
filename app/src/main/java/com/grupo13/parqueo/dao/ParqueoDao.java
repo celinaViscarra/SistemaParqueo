@@ -19,7 +19,10 @@ public interface ParqueoDao {
     Parqueo consultarParqueo(int id_parqueo);
 
     @Insert
-    long insertarParqueo(Parqueo id_parqueo);
+    long insertarParqueo(Parqueo parqueo);
+
+    @Insert
+    void insertarParqueos(List<Parqueo> parqueos);
 
     @Update
     int actualizarParqueo(Parqueo id_parqueo);

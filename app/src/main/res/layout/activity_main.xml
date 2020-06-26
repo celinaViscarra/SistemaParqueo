@@ -52,7 +52,6 @@
             android:id="@+id/imgTransparente"
             android:layout_width="match_parent"
             android:layout_height="match_parent"
-            android:onClick="algo"
             android:src="@color/transparent" />
     </androidx.swiperefreshlayout.widget.SwipeRefreshLayout>
 </androidx.constraintlayout.widget.ConstraintLayout>
