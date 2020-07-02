@@ -29,7 +29,7 @@ import java.util.List;
 
 public class ControlWS {
     public static void traerDatos(Context context){
-        String url = "http://192.168.0.22/SistemaParqueoWS/index.php/api/";
+        String url = "https://eisi.fia.ues.edu.sv/eisi13/parqueows/index.php/api/";
         ControlBD helper = ControlBD.getInstance(context);
         RequestQueue requestQueue;
 
