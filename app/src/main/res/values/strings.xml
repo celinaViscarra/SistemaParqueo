@@ -4,4 +4,7 @@
 
 
     <string name="app_name">Sistema Parqueo</string>
+    <string name="hablar">Hable</string>
+    <string name="di_algo">Di algo, por favor</string>
+    <string name="listening_error">Error al escuchar</string>
 </resources>

@@ -38,6 +38,17 @@
             app:fab_colorPressed="@color/colorAccent"
             fab:fab_label="GPS"
             fab:fab_size="mini" />
+        <com.github.clans.fab.FloatingActionButton
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:onClick="getVoice"
+            android:src="@drawable/ic_mic_none_black_24dp"
+            app:fab_colorNormal="#ffffff"
+            app:fab_colorPressed="#cdcdcd"
+            fab:fab_label="@string/hablar"
+            fab:fab_size="mini" />
+
+
     </com.github.clans.fab.FloatingActionMenu>
     <!-- Le he dado una distancia de 200dp al swipe refresh para
          que no se tome por completo el movimiento del mapa-->
