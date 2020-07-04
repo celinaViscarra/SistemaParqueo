@@ -45,6 +45,7 @@ import com.google.android.gms.maps.GoogleMap;
 import com.google.android.gms.maps.OnMapReadyCallback;
 import com.google.android.gms.maps.SupportMapFragment;
 import com.google.android.gms.maps.UiSettings;
+import com.google.android.gms.maps.model.BitmapDescriptorFactory;
 import com.google.android.gms.maps.model.LatLng;
 import com.google.android.gms.maps.model.Marker;
 import com.google.android.gms.maps.model.MarkerOptions;
@@ -231,6 +232,7 @@ public class MainActivity extends AppCompatActivity implements OnMapReadyCallbac
         for(Ubicacion pivote: ubicaciones){
             mMap.addMarker(new MarkerOptions()
                     .position(new LatLng(pivote.latitud,pivote.longitud))
+                    .icon(BitmapDescriptorFactory.fromResource(R.mipmap.ic_parking))
                     .title(pivote.nombre_ubicacion));
             Log.v("Agregado: ",pivote.nombre_ubicacion);
         }
