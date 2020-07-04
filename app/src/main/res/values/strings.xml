@@ -7,4 +7,5 @@
     <string name="hablar">Hable</string>
     <string name="di_algo">Di algo, por favor</string>
     <string name="listening_error">Error al escuchar</string>
+    <string name="palabras_iniciales">Tu acabas de decir: </string>
 </resources>

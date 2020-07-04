@@ -1,0 +1,13 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <string name="logout">Logout</string>
+    <string name="saludo">Welcome</string>
+
+
+    <string name="app_name">Parking System</string>
+    <string name="hablar">Speak</string>
+    <string name="di_algo">Say something, please</string>
+    <string name="listening_error">Errors listening to you</string>
+    <string name="palabras_iniciales">You just said: </string>
+
+</resources>

@@ -10,6 +10,7 @@ import android.location.Location;
 import android.location.LocationManager;
 import android.os.Bundle;
 import android.speech.RecognizerIntent;
+import android.speech.tts.TextToSpeech;
 import android.util.Log;
 import android.util.TypedValue;
 import android.view.Menu;
@@ -65,6 +66,7 @@ import butterknife.ButterKnife;
 
 public class MainActivity extends AppCompatActivity implements OnMapReadyCallback, GoogleMap.OnMarkerClickListener, SearchView.OnQueryTextListener {
 
+    private TextToSpeech textToSpeech;
     private GoogleMap mMap;
     private MenuItem searchMenuItem;
     private SearchView searchView;
@@ -106,6 +108,25 @@ public class MainActivity extends AppCompatActivity implements OnMapReadyCallbac
                 ControlWS.traerDatos(getApplicationContext());
                 cargarUbicaciones();
                 swipeRefresh.setRefreshing(false);
+            }
+        });
+
+        textToSpeech = new TextToSpeech(getApplicationContext(), new TextToSpeech.OnInitListener() {
+            @Override
+            public void onInit(int status) {
+                if (status == TextToSpeech.SUCCESS){
+                    int ttsLang = textToSpeech.setLanguage(Locale.getDefault());
+                    if (ttsLang == TextToSpeech.LANG_MISSING_DATA
+                            || ttsLang == TextToSpeech.LANG_NOT_SUPPORTED) {
+                        Log.e("TTS", "The Language is not supported!");
+                    } else {
+                        Log.i("TTS", "Language Supported.");
+                    }
+                    Log.i("TTS", "Initialization success.");
+                }
+                else {
+                    Log.e("TTS", "Initialization fail.");
+                }
             }
         });
     }
@@ -258,6 +279,12 @@ public class MainActivity extends AppCompatActivity implements OnMapReadyCallbac
                 if (resultCode == RESULT_OK && data != null){
                     List<String> palabras = data.getStringArrayListExtra(RecognizerIntent.EXTRA_RESULTS);
                     Log.d("PALABRAS", palabras.get(0));
+
+                    int speechStatus = textToSpeech.speak(getString(R.string.palabras_iniciales) + palabras.get(0), TextToSpeech.QUEUE_FLUSH, null);
+
+                    if (speechStatus == TextToSpeech.ERROR) {
+                        Log.e("TTS", "Error in converting Text to Speech!");
+                    }
             }
         }
     }
