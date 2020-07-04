@@ -45,6 +45,7 @@ import com.google.android.gms.maps.GoogleMap;
 import com.google.android.gms.maps.OnMapReadyCallback;
 import com.google.android.gms.maps.SupportMapFragment;
 import com.google.android.gms.maps.UiSettings;
+import com.google.android.gms.maps.model.BitmapDescriptorFactory;
 import com.google.android.gms.maps.model.LatLng;
 import com.google.android.gms.maps.model.Marker;
 import com.google.android.gms.maps.model.MarkerOptions;
@@ -56,6 +57,7 @@ import com.google.gson.reflect.TypeToken;
 import com.grupo13.parqueo.modelo.Ubicacion;
 import com.grupo13.parqueo.utilidades.GPSTracker;
 import com.grupo13.parqueo.utilidades.PermisoService;
+import com.grupo13.parqueo.utilidades.ReconocimientoVoz;
 
 import java.lang.reflect.Type;
 import java.util.List;
@@ -144,11 +146,6 @@ public class MainActivity extends AppCompatActivity implements OnMapReadyCallbac
         uiSettings.setRotateGesturesEnabled(true);
         uiSettings.setZoomControlsEnabled(true);
 
-        // Add a marker in Sydney and move the camera
-        LatLng sydney = new LatLng(13.6929403, -89.2181911);
-        mMap.addMarker(new MarkerOptions().position(sydney).title("Marker in San Salvador"));
-        //mMap.moveCamera(CameraUpdateFactory.newLatLng(sydney));
-
         if (ActivityCompat.checkSelfPermission(this, Manifest.permission.ACCESS_FINE_LOCATION) != PackageManager.PERMISSION_GRANTED && ActivityCompat.checkSelfPermission(this, Manifest.permission.ACCESS_COARSE_LOCATION) != PackageManager.PERMISSION_GRANTED) {
             return;
         }
@@ -156,7 +153,14 @@ public class MainActivity extends AppCompatActivity implements OnMapReadyCallbac
         mMap.setMyLocationEnabled(true);
         GPSTracker tracker = new GPSTracker(MainActivity.this);
         LatLng ll = new LatLng(tracker.getLatitude(), tracker.getLongitude());
-        mMap.moveCamera(CameraUpdateFactory.newLatLngZoom(ll, 17));
+
+        if (ll.longitude == 0 && ll.longitude == 0) {
+            ll = new LatLng(13.6929403, -89.2181911);
+            mMap.moveCamera(CameraUpdateFactory.newLatLngZoom(ll, 9));
+        }else
+            mMap.moveCamera(CameraUpdateFactory.newLatLngZoom(ll, 17));
+
+        Log.d("LOCALIZACION", ll.toString());
 
         //Dejo esto por si queremos cambiar automaticamente la localizacion.
         /*mMap.setOnMyLocationChangeListener(new GoogleMap.OnMyLocationChangeListener() {
@@ -228,6 +232,7 @@ public class MainActivity extends AppCompatActivity implements OnMapReadyCallbac
         for(Ubicacion pivote: ubicaciones){
             mMap.addMarker(new MarkerOptions()
                     .position(new LatLng(pivote.latitud,pivote.longitud))
+                    .icon(BitmapDescriptorFactory.fromResource(R.mipmap.ic_parking))
                     .title(pivote.nombre_ubicacion));
             Log.v("Agregado: ",pivote.nombre_ubicacion);
         }
@@ -278,9 +283,31 @@ public class MainActivity extends AppCompatActivity implements OnMapReadyCallbac
             case RECOGNIZE_SPEACH_CODE:
                 if (resultCode == RESULT_OK && data != null){
                     List<String> palabras = data.getStringArrayListExtra(RecognizerIntent.EXTRA_RESULTS);
-                    Log.d("PALABRAS", palabras.get(0));
 
-                    int speechStatus = textToSpeech.speak(getString(R.string.palabras_iniciales) + palabras.get(0), TextToSpeech.QUEUE_FLUSH, null);
+                    ReconocimientoVoz voz = new ReconocimientoVoz(palabras.get(0).toLowerCase());
+                    String respuesta = null;
+
+                    if (voz.esComandoValido()){
+                        GPSTracker tracker = new GPSTracker(getApplicationContext());
+                        if (tracker.canGetLocation()){
+
+                            LatLng miUbicacion = new LatLng(tracker.getLatitude(), tracker.getLongitude());
+                            List<Ubicacion> ubicaciones = helper.ubicacionDao().obtenerUbicaciones();
+
+                            Ubicacion masCercana = voz.getRespuesta(miUbicacion, ubicaciones);
+
+                            if(masCercana != null){
+                                mMap.moveCamera(CameraUpdateFactory.newLatLngZoom( new LatLng(masCercana.latitud, masCercana.longitud), 17));
+                            } else{
+                                respuesta = getString(R.string.problema);
+                            }
+                        }else
+                            respuesta = getString(R.string.ubicacion_apagada);
+                    }else {
+                        respuesta = getString(R.string.comando_invalido);
+                    }
+
+                    int speechStatus = textToSpeech.speak(respuesta, TextToSpeech.QUEUE_FLUSH, null);
 
                     if (speechStatus == TextToSpeech.ERROR) {
                         Log.e("TTS", "Error in converting Text to Speech!");
