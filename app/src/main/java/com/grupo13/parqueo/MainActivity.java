@@ -17,15 +17,17 @@ import android.view.Menu;
 import android.view.MenuInflater;
 import android.view.MenuItem;
 import android.view.View;
+import android.widget.FrameLayout;
 import android.widget.ImageView;
 import android.widget.RelativeLayout;
-import android.widget.SearchView;
+import androidx.appcompat.widget.SearchView;
 import android.widget.Toast;
 
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.core.app.ActivityCompat;
+import androidx.fragment.app.FragmentTransaction;
 import androidx.swiperefreshlayout.widget.SwipeRefreshLayout;
 
 import com.android.volley.Cache;
@@ -60,6 +62,7 @@ import com.grupo13.parqueo.utilidades.PermisoService;
 import com.grupo13.parqueo.utilidades.ReconocimientoVoz;
 
 import java.lang.reflect.Type;
+import java.util.ArrayList;
 import java.util.List;
 import java.util.Locale;
 
@@ -80,6 +83,9 @@ public class MainActivity extends AppCompatActivity implements OnMapReadyCallbac
     SwipeRefreshLayout swipeRefresh;
     SupportMapFragment mapFragment;
     ControlBD helper;
+    UbicacionListaFragment current;
+    @BindView(R.id.fragmento)
+    FrameLayout frameLayout;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -207,15 +213,57 @@ public class MainActivity extends AppCompatActivity implements OnMapReadyCallbac
     public boolean onCreateOptionsMenu(Menu menu) {
         MenuInflater inflater = getMenuInflater();
         inflater.inflate(R.menu.menu_desplegable, menu);
-        SearchManager searchManager = (SearchManager) getSystemService(Context.SEARCH_SERVICE);
-        searchMenuItem = menu.findItem(R.id.busqueda);
-        searchView = (SearchView) searchMenuItem.getActionView();
-        searchView.setSearchableInfo(searchManager.getSearchableInfo(getComponentName()));
-        searchView.setSubmitButtonEnabled(true);
-        searchView.setOnQueryTextListener(this);
+        MenuItem item = menu.findItem(R.id.action_search);
+        SearchView searchView = (SearchView) item.getActionView();
+        item.setOnActionExpandListener(new MenuItem.OnActionExpandListener() {
+            @Override
+            public boolean onMenuItemActionExpand(MenuItem item) {
+                FragmentTransaction txn = getSupportFragmentManager().beginTransaction();
+                ArrayList<Ubicacion> ubicaciones = (ArrayList<Ubicacion>) helper.ubicacionDao().obtenerUbicaciones();
+                current = UbicacionListaFragment.newInstance(ubicaciones);
+                txn.replace(R.id.fragmento, current);
+                txn.commit();
+                frameLayout.setVisibility(View.VISIBLE);
+                return true;
+            }
 
+            @Override
+            public boolean onMenuItemActionCollapse(MenuItem item) {
+                FragmentTransaction txn;
+                txn = getSupportFragmentManager().beginTransaction();
+                txn.remove(current);
+                txn.commit();
+                frameLayout.setVisibility(View.INVISIBLE);
+                return true;
+            }
+        });
+        searchView.setOnQueryTextListener(this);
         return true;
     }
+    //TODO: Cambiar por cambiar fragment
+    @Override
+    public boolean onQueryTextSubmit(String query) {
+        //Toast.makeText(this, query,Toast.LENGTH_SHORT).show();
+        return false;
+    }
+
+    @Override
+    public boolean onQueryTextChange(String newText) {
+        ArrayList<Ubicacion> elementosQuery = new ArrayList<>();
+        ArrayList<Ubicacion> ubicaciones = (ArrayList<Ubicacion>) helper.ubicacionDao().obtenerUbicaciones();
+        for(Ubicacion pivote: ubicaciones)
+            if(pivote.nombre_ubicacion.contains(newText))
+                elementosQuery.add(pivote);
+
+        FragmentTransaction txn;
+        txn = getSupportFragmentManager().beginTransaction();
+        current = UbicacionListaFragment.newInstance(elementosQuery);
+        txn.replace(R.id.fragmento, current);
+        txn.commit();
+
+        return false;
+    }
+
 
     @Override
     public boolean onOptionsItemSelected(@NonNull MenuItem item) {
@@ -256,18 +304,6 @@ public class MainActivity extends AppCompatActivity implements OnMapReadyCallbac
                     }
                 });
     }
-
-    @Override
-    public boolean onQueryTextSubmit(String query) {
-        Toast.makeText(this, query,Toast.LENGTH_SHORT).show();
-        return false;
-    }
-
-    @Override
-    public boolean onQueryTextChange(String newText) {
-        return false;
-    }
-
     // Permitir escuchar por el microfono
     private static  final int RECOGNIZE_SPEACH_CODE = 100;
 

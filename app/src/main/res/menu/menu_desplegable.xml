@@ -4,11 +4,11 @@
     xmlns:tools="http://schemas.android.com/tools"
     tools:context=".MainActivity">
 
-    <item android:id="@+id/busqueda"
-        android:title="Buscar"
+    <item android:id="@+id/action_search"
+        android:title="Search"
         android:icon="@drawable/ic_search_icon_darks"
-        app:showAsAction="collapseActionView|ifRoom"
-        app:actionViewClass="android.widget.SearchView" />
+        app:showAsAction="always|collapseActionView"
+        app:actionViewClass="androidx.appcompat.widget.SearchView"/>
     <item
         android:id="@+id/logout"
         android:title="@string/logout"/>

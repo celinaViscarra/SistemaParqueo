@@ -1,13 +1,17 @@
 package com.grupo13.parqueo.modelo;
 
+import android.os.Parcelable;
+
 import androidx.annotation.NonNull;
 import androidx.room.Entity;
 import androidx.room.PrimaryKey;
 
 import com.google.gson.annotations.SerializedName;
 
+import java.io.Serializable;
+
 @Entity
-public class Ubicacion {
+public class Ubicacion implements Serializable {
     @NonNull
     @PrimaryKey
     @SerializedName("id_ubicacion")

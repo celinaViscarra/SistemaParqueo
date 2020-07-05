@@ -11,5 +11,7 @@
     <string name="comando_invalido">Comando invalido</string>
     <string name="ubicacion_apagada">Por favor, asegurese de tener encendida la ubicación</string>
     <string name="problema">Hubo un problema, intente de nuevo por favor</string>
+    <!-- TODO: Remove or change this placeholder text -->
+    <string name="hello_blank_fragment">Hello blank fragment</string>
 
 </resources>
