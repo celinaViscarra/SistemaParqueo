@@ -105,9 +105,10 @@ public class MainActivity extends AppCompatActivity implements OnMapReadyCallbac
                 .build();
         mGoogleSignInClient = GoogleSignIn.getClient(this, gso);
         GoogleSignInAccount account = GoogleSignIn.getLastSignedInAccount(this);
+        String name = account.getDisplayName();
+        String email = account.getEmail();
 
-        Snackbar.make(mapFragment.getView(), getString(R.string.saludo) + " " + account.getDisplayName(), Snackbar.LENGTH_SHORT).show();
-
+        Snackbar.make(mapFragment.getView(), getString(R.string.saludo) + " " + name, Snackbar.LENGTH_SHORT).show();
         locationManager = (LocationManager)
                 this.getSystemService(Context.LOCATION_SERVICE);
 
