@@ -11,6 +11,7 @@ import com.android.volley.Network;
 import com.android.volley.NetworkResponse;
 import com.android.volley.Request;
 import com.android.volley.RequestQueue;
+import com.android.volley.Response;
 import com.android.volley.VolleyError;
 import com.android.volley.toolbox.BasicNetwork;
 import com.android.volley.toolbox.DiskBasedCache;
@@ -160,10 +161,18 @@ public class ControlWS {
         StringRequest requestFoto = new StringRequest(
                 Request.Method.PUT,
                 url,
-                response -> {
-
+                new Response.Listener<String>() {
+                    @Override
+                    public void onResponse(String response) {
+                        Log.d("POTOGRAFIA-EXITO", response);
+                    }
                 },
-                error -> {}
+                new Response.ErrorListener() {
+                    @Override
+                    public void onErrorResponse(VolleyError error) {
+                        Log.d("POTOGRAFIA-FALLO", error.toString());
+                    }
+                }
         ){
             @Override
             protected Map<String, String> getParams() throws AuthFailureError {
