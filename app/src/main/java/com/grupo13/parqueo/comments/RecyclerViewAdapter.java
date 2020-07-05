@@ -1,19 +1,24 @@
 package com.grupo13.parqueo.comments;
 
 import android.content.Context;
+import android.util.Log;
+import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.RelativeLayout;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import androidx.annotation.NonNull;
 import androidx.recyclerview.widget.RecyclerView;
 import de.hdodenhof.circleimageview.CircleImageView;
+
+import com.bumptech.glide.Glide;
 import com.grupo13.parqueo.R;
 
 import java.util.ArrayList;
 
-public class RecyclerViewAdapter extends RecyclerView.Adapter<RecyclerViewAdapter.ViewHolder>{
+public class    RecyclerViewAdapter extends RecyclerView.Adapter<RecyclerViewAdapter.ViewHolder>{
     private static final String TAG = "RecyclerViewAdapter";
     private ArrayList<String> nImagesNames = new ArrayList<>();
     private ArrayList<String> nImages = new ArrayList<>();
@@ -30,12 +35,33 @@ public class RecyclerViewAdapter extends RecyclerView.Adapter<RecyclerViewAdapte
     @NonNull
     @Override
     public ViewHolder onCreateViewHolder(@NonNull ViewGroup parent, int viewType) {
+        View view = LayoutInflater.from(parent.getContext()).inflate(R.layout.layout_comments, parent,
+                false);
+        ViewHolder holder = new ViewHolder(view);
         return null;
     }
 
     @Override
     public void onBindViewHolder(@NonNull ViewHolder holder, int position) {
+        Log.d(TAG, "onBindViewHolder: called");
+        //Modificar para la obtencion de fotos de perfil.
+        Glide.with(context).asBitmap().load(nImages.get(position)).into(holder.image);
+        holder.imageName.setText(nImagesNames.get(position));
 
+        holder.parentLayout.setOnClickListener(new View.OnClickListener(){
+            public void onClick(View view){
+                Log.d(TAG, "onClick: clicked on" + nImagesNames.get(position));
+                Toast.makeText(context, nImagesNames.get(position), Toast.LENGTH_SHORT).show();
+            }
+        });
+
+        holder.parentLayout.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                Log.d(TAG, "onClick: clicked on" + nComments.get(position));
+                Toast.makeText(context, nComments.get(position), Toast.LENGTH_SHORT).show();
+            }
+        });
     }
 
     @Override
