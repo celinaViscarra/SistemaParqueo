@@ -47,6 +47,7 @@ public class    RecyclerViewAdapter extends RecyclerView.Adapter<RecyclerViewAda
         //Modificar para la obtencion de fotos de perfil.
         Glide.with(context).asBitmap().load(nImages.get(position)).into(holder.image);
         holder.imageName.setText(nImagesNames.get(position));
+        holder.imageComment.setText(nComments.get(position));
 
       /*  holder.parentLayout.setOnClickListener(new View.OnClickListener(){
             public void onClick(View view){
