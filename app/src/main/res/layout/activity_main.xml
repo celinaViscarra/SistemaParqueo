@@ -55,6 +55,15 @@
             fab:fab_label="@string/hablar"
             fab:fab_size="mini" />
 
+        <com.github.clans.fab.FloatingActionButton
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:onClick="photo"
+            android:src="@drawable/ic_camera"
+            app:fab_colorNormal="#ffffff"
+            app:fab_colorPressed="#cdcdcd"
+            fab:fab_size="mini" />
+
     </com.github.clans.fab.FloatingActionMenu>
     <!-- Le he dado una distancia de 200dp al swipe refresh para
          que no se tome por completo el movimiento del mapa-->

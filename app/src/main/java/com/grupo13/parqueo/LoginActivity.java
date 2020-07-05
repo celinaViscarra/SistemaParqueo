@@ -63,6 +63,10 @@ public class LoginActivity extends AppCompatActivity {
     public void updateUI(GoogleSignInAccount account) {
         // Por el momento no hace nada con "account, podria ser enviada como parametro"
         if (account != null) {
+
+            // Registrar el usuario
+            ControlWS.registrarUsuario(getApplicationContext(), account);
+
             startActivity(new Intent(this, MainActivity.class));
             finish();
         }
