@@ -66,7 +66,7 @@ public class    RecyclerViewAdapter extends RecyclerView.Adapter<RecyclerViewAda
 
     @Override
     public int getItemCount() {
-        return 0;
+        return nComments.size();
     }
 
     public class ViewHolder extends RecyclerView.ViewHolder{

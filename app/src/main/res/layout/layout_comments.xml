@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="utf-8"?>
 <RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="match_parent"
-    android:layout_height="match_parent"
+    android:layout_height="wrap_content"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     android:background="@color/white"
     android:padding="05dp"
@@ -40,22 +40,20 @@
                 android:id="@+id/comment_username"
                 android:layout_marginLeft="15dp"
                 android:textColor="@color/black"
-                android:textSize="18sp"
+                android:textSize="10sp"
                 android:textStyle="bold"/>
 
             <TextView
+                android:id="@+id/comment"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:text="this is a comment"
-                android:layout_marginLeft="5dp"
-                android:textColor="@color/black"
-                android:textSize="18sp"
+                android:layout_marginLeft="15dp"
                 android:layout_toRightOf="@+id/comment_username"
-                android:id="@+id/comment"/>
+                android:text="this is a comment"
+                android:textColor="@color/black"
+                android:textSize="10sp" />
 
         </RelativeLayout>
-
-
     </RelativeLayout>
 
 </RelativeLayout>
