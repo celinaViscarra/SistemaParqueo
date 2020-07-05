@@ -49,6 +49,7 @@ import com.google.android.gms.maps.SupportMapFragment;
 import com.google.android.gms.maps.UiSettings;
 import com.google.android.gms.maps.model.BitmapDescriptorFactory;
 import com.google.android.gms.maps.model.LatLng;
+import com.google.android.gms.maps.model.MapStyleOptions;
 import com.google.android.gms.maps.model.Marker;
 import com.google.android.gms.maps.model.MarkerOptions;
 import com.google.android.gms.tasks.OnCompleteListener;
@@ -170,6 +171,7 @@ public class MainActivity extends AppCompatActivity implements OnMapReadyCallbac
 
             }
         });*/
+        mMap.setMapStyle(MapStyleOptions.loadRawResourceStyle(this, R.raw.style_json));
         cargarUbicaciones();
         //Esta parte es para mover los botones xxd
         /*@SuppressLint("ResourceType") View zoomControls = mapFragment.getView().findViewById(0x1);
