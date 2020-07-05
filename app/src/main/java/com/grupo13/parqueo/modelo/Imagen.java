@@ -1,8 +1,6 @@
 package com.grupo13.parqueo.modelo;
 
-import java.sql.Date;
 import java.util.Calendar;
-
 import androidx.annotation.NonNull;
 import androidx.room.Entity;
 import androidx.room.ForeignKey;
@@ -48,5 +46,6 @@ public class Imagen {
         this.id_ubicacion = id_ubicacion;
         this.id_comentario = id_comentario;
         this.fecha_imagen = fecha_imagen;
+        this.filename = filename;
     }
 }

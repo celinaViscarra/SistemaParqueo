@@ -1,8 +1,7 @@
 package com.grupo13.parqueo;
 
+import android.app.Activity;
 import android.content.Context;
-import android.util.Log;
-import android.widget.ImageView;
 import android.widget.Toast;
 
 import com.android.volley.Cache;
@@ -24,11 +23,16 @@ import com.grupo13.parqueo.modelo.Parqueo;
 import com.grupo13.parqueo.modelo.Ubicacion;
 import com.grupo13.parqueo.modelo.Usuario;
 
+import org.json.JSONArray;
+import org.json.JSONException;
+import org.json.JSONObject;
+
 import java.lang.reflect.Type;
+import java.util.ArrayList;
 import java.util.List;
 
 public class ControlWS {
-    public static void traerDatos(Context context){
+    public static void traerDatos(Context context, MainActivity main){
         String url = "https://eisi.fia.ues.edu.sv/eisi13/parqueows/index.php/api/";
         ControlBD helper = ControlBD.getInstance(context);
         RequestQueue requestQueue;
@@ -40,11 +44,12 @@ public class ControlWS {
         //Instanciar RequestQueue con el cache y la red
         requestQueue = new RequestQueue(cache, network);
         //Iniciar la cola
-        requestQueue.start();
         helper.vaciarBD();
+        requestQueue.start();
         //TODO: Agregarle una forma de revisar si tiene internet.
         //Si, se pudo hacer mas corto este proceso pero no tenia ganas :v
         //Cargamos la lista de ubicaciones
+        String respuesta = "";
         StringRequest requestUbicaciones = new StringRequest(
                 Request.Method.GET,
                 url+"ubicacion",
@@ -53,6 +58,7 @@ public class ControlWS {
                     Type listType = new TypeToken<List<Ubicacion>>(){}.getType();
                     List<Ubicacion> ubicaciones = gson.fromJson(response, listType);
                     helper.ubicacionDao().insertarUbicaciones(ubicaciones);
+                    main.cargarUbicaciones();
                 },
                 error -> onErrorResponse(error,context)
         );
@@ -111,14 +117,29 @@ public class ControlWS {
                 Request.Method.GET,
                 url+"imagen",
                 response -> {
-                    Gson gson = new Gson();
-                    Type listType = new TypeToken<List<Imagen>>(){}.getType();
-                    List<Imagen> imagenes = gson.fromJson(response, listType);
+                    //Gson gson = new Gson();
+                    //Type listType = new TypeToken<List<Imagen>>(){}.getType();
+                    //List<Imagen> imagenes = gson.fromJson(response, listType);
+                    List<Imagen> imagenes = new ArrayList<>();
+                    try {
+                        JSONArray arrayImagenes = new JSONArray(response);
+                        for(int i=0; i<arrayImagenes.length();i++){
+                            JSONObject obj = arrayImagenes.getJSONObject(0);
+                            Imagen pivote = new Imagen();
+                            pivote.id_imagen = Integer.parseInt(obj.getString("id_imagen"));
+                            pivote.id_ubicacion = obj.isNull("id_ubicacion") ? null : Integer.parseInt(obj.getString("id_ubicacion"));
+                            pivote.id_comentario = obj.isNull("id_comentario") ? null : Integer.parseInt(obj.getString("id_comentario"));
+                            //alendar cal = Calendar.getInstance();
+
+                        }
+                    } catch (JSONException e) {
+                        Toast.makeText(context, "Error en parseo JSON", Toast.LENGTH_SHORT).show();
+                    }
                     helper.imagenDao().insertarImagenes(imagenes);
                 },
                 error -> onErrorResponse(error,context)
         );
-        requestQueue.add(requestComentarios);
+        //requestQueue.add(requestImagenes);
 
     }
 

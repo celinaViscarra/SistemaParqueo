@@ -106,7 +106,7 @@ public class MainActivity extends AppCompatActivity implements OnMapReadyCallbac
             @Override
             public void onRefresh() {
                 //Aqui hacemos la magia del swipe refresh xd
-                ControlWS.traerDatos(getApplicationContext());
+                ControlWS.traerDatos(getApplicationContext(), MainActivity.this);
                 cargarUbicaciones();
                 swipeRefresh.setRefreshing(false);
             }
@@ -234,12 +234,15 @@ public class MainActivity extends AppCompatActivity implements OnMapReadyCallbac
         return true;
     }
     public void cargarUbicaciones(){
+        mMap.clear();
         List<Ubicacion> ubicaciones = helper.ubicacionDao().obtenerUbicaciones();
         for(Ubicacion pivote: ubicaciones){
-            mMap.addMarker(new MarkerOptions()
-                    .position(new LatLng(pivote.latitud,pivote.longitud))
+            Marker marker = mMap.addMarker(new MarkerOptions()
                     .icon(BitmapDescriptorFactory.fromResource(R.mipmap.ic_parking))
+                    .position(new LatLng(pivote.latitud,pivote.longitud))
                     .title(pivote.nombre_ubicacion));
+            marker.setTag(pivote);
+            //
             Log.v("Agregado: ",pivote.nombre_ubicacion);
         }
     }
