@@ -62,6 +62,7 @@ import com.grupo13.parqueo.utilidades.GPSTracker;
 import com.grupo13.parqueo.utilidades.PermisoService;
 import com.grupo13.parqueo.utilidades.ReconocimientoVoz;
 
+import java.io.Serializable;
 import java.lang.reflect.Type;
 import java.util.ArrayList;
 import java.util.List;
@@ -70,7 +71,7 @@ import java.util.Locale;
 import butterknife.BindView;
 import butterknife.ButterKnife;
 
-public class MainActivity extends AppCompatActivity implements OnMapReadyCallback, GoogleMap.OnMarkerClickListener, SearchView.OnQueryTextListener {
+public class MainActivity extends AppCompatActivity implements OnMapReadyCallback, GoogleMap.OnMarkerClickListener, SearchView.OnQueryTextListener, Serializable {
 
     private TextToSpeech textToSpeech;
     private GoogleMap mMap;
@@ -82,6 +83,7 @@ public class MainActivity extends AppCompatActivity implements OnMapReadyCallbac
     LocationManager locationManager;
     @BindView(R.id.swiperefresh)
     SwipeRefreshLayout swipeRefresh;
+    MenuItem item;
     SupportMapFragment mapFragment;
     ControlBD helper;
     UbicacionListaFragment current;
@@ -215,14 +217,14 @@ public class MainActivity extends AppCompatActivity implements OnMapReadyCallbac
     public boolean onCreateOptionsMenu(Menu menu) {
         MenuInflater inflater = getMenuInflater();
         inflater.inflate(R.menu.menu_desplegable, menu);
-        MenuItem item = menu.findItem(R.id.action_search);
-        SearchView searchView = (SearchView) item.getActionView();
+        item = menu.findItem(R.id.action_search);
+        searchView = (SearchView) item.getActionView();
         item.setOnActionExpandListener(new MenuItem.OnActionExpandListener() {
             @Override
             public boolean onMenuItemActionExpand(MenuItem item) {
                 FragmentTransaction txn = getSupportFragmentManager().beginTransaction();
                 ArrayList<Ubicacion> ubicaciones = (ArrayList<Ubicacion>) helper.ubicacionDao().obtenerUbicaciones();
-                current = UbicacionListaFragment.newInstance(ubicaciones);
+                current = UbicacionListaFragment.newInstance(ubicaciones, MainActivity.this);
                 txn.replace(R.id.fragmento, current);
                 txn.commit();
                 frameLayout.setVisibility(View.VISIBLE);
@@ -259,13 +261,27 @@ public class MainActivity extends AppCompatActivity implements OnMapReadyCallbac
 
         FragmentTransaction txn;
         txn = getSupportFragmentManager().beginTransaction();
-        current = UbicacionListaFragment.newInstance(elementosQuery);
+        current = UbicacionListaFragment.newInstance(elementosQuery, MainActivity.this);
         txn.replace(R.id.fragmento, current);
         txn.commit();
 
         return false;
     }
 
+    public void seleccionarUbi(Ubicacion ubi){
+        item.collapseActionView();
+        Toast.makeText(this,"Se ha seleccionado: "+ubi.nombre_ubicacion,Toast.LENGTH_SHORT).show();
+        LatLng ll = new LatLng(ubi.latitud, ubi.longitud);
+
+        if (ll.longitude == 0 && ll.longitude == 0) {
+            ll = new LatLng(13.6929403, -89.2181911);
+            mMap.animateCamera(CameraUpdateFactory.newLatLngZoom(ll, 9));
+        }else
+            mMap.animateCamera(CameraUpdateFactory.newLatLngZoom(ll, 17));
+
+        Log.d("LOCALIZACION", ll.toString());
+
+    }
 
     @Override
     public boolean onOptionsItemSelected(@NonNull MenuItem item) {

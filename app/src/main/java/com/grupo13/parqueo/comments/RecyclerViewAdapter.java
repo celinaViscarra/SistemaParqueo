@@ -18,7 +18,7 @@ import com.grupo13.parqueo.R;
 
 import java.util.ArrayList;
 
-public class RecyclerViewAdapter extends RecyclerView.Adapter<RecyclerViewAdapter.ViewHolder>{
+public class    RecyclerViewAdapter extends RecyclerView.Adapter<RecyclerViewAdapter.ViewHolder>{
     private static final String TAG = "RecyclerViewAdapter";
     private ArrayList<String> nImagesNames = new ArrayList<>();
     private ArrayList<String> nImages = new ArrayList<>();
