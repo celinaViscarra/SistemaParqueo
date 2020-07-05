@@ -20,7 +20,7 @@ public class RecyclerViewAdapter extends RecyclerView.Adapter<RecyclerViewAdapte
     private ArrayList<String> nComments = new ArrayList<>();
     private Context context;
 
-    public RecyclerViewAdapter(ArrayList<String> nImagesNames, ArrayList<String> nImages, ArrayList<String> nComments, Context context) {
+    public RecyclerViewAdapter(Context context, ArrayList<String> nImagesNames, ArrayList<String> nImages, ArrayList<String> nComments) {
         this.nImagesNames = nImagesNames;
         this.nImages = nImages;
         this.nComments = nComments;
