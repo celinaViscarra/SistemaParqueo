@@ -149,7 +149,6 @@ public class MainActivity extends AppCompatActivity implements OnMapReadyCallbac
     @Override
     public void onMapReady(GoogleMap googleMap) {
         mMap = googleMap;
-        mMap.setOnMarkerClickListener(this);
 
         UiSettings uiSettings = mMap.getUiSettings();
         uiSettings.setCompassEnabled(true);
@@ -302,11 +301,7 @@ public class MainActivity extends AppCompatActivity implements OnMapReadyCallbac
     }
     @Override
     public boolean onMarkerClick(final Marker marker) {
-        //Para desplegar la opcion de comentarios.
-        //Hacer intent.
-        setContentView(R.layout.comments_tool);
-
-        //Toast.makeText(this,marker.getTitle(),Toast.LENGTH_SHORT).show();
+        Toast.makeText(this,marker.getTitle(),Toast.LENGTH_SHORT).show();
         return true;
     }
     public void cargarUbicaciones(){
