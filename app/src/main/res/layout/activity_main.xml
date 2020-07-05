@@ -20,14 +20,19 @@
         app:layout_constraintVertical_bias="1.0"
         tools:context=".MapsActivity" />
 
+
     <com.github.clans.fab.FloatingActionMenu
-        android:id="@+id/fab3"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_gravity="bottom|right"
-        android:src="@drawable/common_google_signin_btn_icon_dark"
-        app:layout_constraintBottom_toBottomOf="@+id/map"
-        app:layout_constraintEnd_toEndOf="parent">
+        android:id="@+id/menu_labels_right"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:layout_alignParentBottom="true"
+        android:paddingRight="10dp"
+        android:paddingBottom="10dp"
+        android:paddingLeft="10dp"
+        fab:menu_labels_ellipsize="end"
+        fab:menu_labels_singleLine="true"
+        fab:menu_backgroundColor="#ccffffff"
+        fab:menu_labels_position="right">
 
         <com.github.clans.fab.FloatingActionButton
             android:layout_width="wrap_content"
@@ -37,7 +42,9 @@
             app:fab_colorNormal="@color/colorAccent"
             app:fab_colorPressed="@color/colorAccent"
             fab:fab_label="GPS"
+            android:layout_gravity="left"
             fab:fab_size="mini" />
+
         <com.github.clans.fab.FloatingActionButton
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
@@ -47,7 +54,6 @@
             app:fab_colorPressed="#cdcdcd"
             fab:fab_label="@string/hablar"
             fab:fab_size="mini" />
-
 
     </com.github.clans.fab.FloatingActionMenu>
     <!-- Le he dado una distancia de 200dp al swipe refresh para

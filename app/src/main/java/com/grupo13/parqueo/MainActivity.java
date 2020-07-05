@@ -151,16 +151,7 @@ public class MainActivity extends AppCompatActivity implements OnMapReadyCallbac
         }
         //Esto activa el gps
         mMap.setMyLocationEnabled(true);
-        GPSTracker tracker = new GPSTracker(MainActivity.this);
-        LatLng ll = new LatLng(tracker.getLatitude(), tracker.getLongitude());
-
-        if (ll.longitude == 0 && ll.longitude == 0) {
-            ll = new LatLng(13.6929403, -89.2181911);
-            mMap.moveCamera(CameraUpdateFactory.newLatLngZoom(ll, 9));
-        }else
-            mMap.moveCamera(CameraUpdateFactory.newLatLngZoom(ll, 17));
-
-        Log.d("LOCALIZACION", ll.toString());
+        gpsTrack();
 
         //Dejo esto por si queremos cambiar automaticamente la localizacion.
         /*mMap.setOnMyLocationChangeListener(new GoogleMap.OnMyLocationChangeListener() {
@@ -176,7 +167,7 @@ public class MainActivity extends AppCompatActivity implements OnMapReadyCallbac
         });*/
         cargarUbicaciones();
         //Esta parte es para mover los botones xxd
-        @SuppressLint("ResourceType") View zoomControls = mapFragment.getView().findViewById(0x1);
+        /*@SuppressLint("ResourceType") View zoomControls = mapFragment.getView().findViewById(0x1);
 
         if (zoomControls != null && zoomControls.getLayoutParams() instanceof RelativeLayout.LayoutParams) {
             // ZoomControl is inside of RelativeLayout
@@ -193,7 +184,23 @@ public class MainActivity extends AppCompatActivity implements OnMapReadyCallbac
                     getResources().getDisplayMetrics());
             params_zoom.setMargins(margin, margin, margin, margin);
 
-        }
+        }*/
+
+    }
+    public void localizar(View v){
+        gpsTrack();
+    }
+    public void gpsTrack(){
+        GPSTracker tracker = new GPSTracker(MainActivity.this);
+        LatLng ll = new LatLng(tracker.getLatitude(), tracker.getLongitude());
+
+        if (ll.longitude == 0 && ll.longitude == 0) {
+            ll = new LatLng(13.6929403, -89.2181911);
+            mMap.moveCamera(CameraUpdateFactory.newLatLngZoom(ll, 9));
+        }else
+            mMap.moveCamera(CameraUpdateFactory.newLatLngZoom(ll, 17));
+
+        Log.d("LOCALIZACION", ll.toString());
 
     }
 
