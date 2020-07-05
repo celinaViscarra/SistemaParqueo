@@ -343,6 +343,7 @@ public class MainActivity extends AppCompatActivity implements OnMapReadyCallbac
 
                             if(masCercana != null){
                                 mMap.moveCamera(CameraUpdateFactory.newLatLngZoom( new LatLng(masCercana.latitud, masCercana.longitud), 17));
+                                respuesta = getString(R.string.distancia) + voz.getDistanciaMetros(miUbicacion, masCercana) + getString(R.string.metros);
                             } else{
                                 respuesta = getString(R.string.problema);
                             }
