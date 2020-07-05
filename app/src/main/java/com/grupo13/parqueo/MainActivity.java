@@ -275,9 +275,9 @@ public class MainActivity extends AppCompatActivity implements OnMapReadyCallbac
 
         if (ll.longitude == 0 && ll.longitude == 0) {
             ll = new LatLng(13.6929403, -89.2181911);
-            mMap.moveCamera(CameraUpdateFactory.newLatLngZoom(ll, 9));
+            mMap.animateCamera(CameraUpdateFactory.newLatLngZoom(ll, 9));
         }else
-            mMap.moveCamera(CameraUpdateFactory.newLatLngZoom(ll, 17));
+            mMap.animateCamera(CameraUpdateFactory.newLatLngZoom(ll, 17));
 
         Log.d("LOCALIZACION", ll.toString());
 
