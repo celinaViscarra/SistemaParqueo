@@ -2,8 +2,10 @@ package com.grupo13.parqueo;
 
 import android.app.Activity;
 import android.content.Context;
+import android.util.Log;
 import android.widget.Toast;
 
+import com.android.volley.AuthFailureError;
 import com.android.volley.Cache;
 import com.android.volley.Network;
 import com.android.volley.NetworkResponse;
@@ -13,6 +15,7 @@ import com.android.volley.VolleyError;
 import com.android.volley.toolbox.BasicNetwork;
 import com.android.volley.toolbox.DiskBasedCache;
 import com.android.volley.toolbox.HurlStack;
+import com.android.volley.toolbox.JsonObjectRequest;
 import com.android.volley.toolbox.StringRequest;
 import com.google.gson.Gson;
 import com.google.gson.reflect.TypeToken;
@@ -29,7 +32,9 @@ import org.json.JSONObject;
 
 import java.lang.reflect.Type;
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
 public class ControlWS {
     public static void traerDatos(Context context, MainActivity main){
@@ -140,6 +145,36 @@ public class ControlWS {
                 error -> onErrorResponse(error,context)
         );
         //requestQueue.add(requestImagenes);
+
+    }
+
+    public static void subirFoto(Context context, String foto) {
+        String url = "https://eisi.fia.ues.edu.sv/eisi13/parqueows/index.php/api/imagenupload";
+
+        RequestQueue requestQueue;
+        Cache cache = new DiskBasedCache(context.getCacheDir(), 1024 * 1024); // 1MB cap
+        Network network = new BasicNetwork(new HurlStack());
+        requestQueue = new RequestQueue(cache, network);
+        requestQueue.start();
+        String respuesta = "";
+        StringRequest requestFoto = new StringRequest(
+                Request.Method.PUT,
+                url,
+                response -> {
+
+                },
+                error -> {}
+        ){
+            @Override
+            protected Map<String, String> getParams() throws AuthFailureError {
+                Map<String, String> params = new HashMap<String, String>();
+                params.put("id_ubicacion", "5");
+                params.put("extension", "jpg");
+                params.put("base64", foto);
+                return params;
+            }
+        };
+        requestQueue.add(requestFoto);
 
     }
 
