@@ -60,6 +60,7 @@ import com.google.android.gms.tasks.Task;
 import com.google.android.material.snackbar.Snackbar;
 import com.google.gson.Gson;
 import com.google.gson.reflect.TypeToken;
+import com.grupo13.parqueo.comments.Comments;
 import com.grupo13.parqueo.modelo.Ubicacion;
 import com.grupo13.parqueo.utilidades.GPSTracker;
 import com.grupo13.parqueo.utilidades.PermisoService;
@@ -149,6 +150,7 @@ public class MainActivity extends AppCompatActivity implements OnMapReadyCallbac
     @Override
     public void onMapReady(GoogleMap googleMap) {
         mMap = googleMap;
+        mMap.setOnMarkerClickListener(this);
 
         UiSettings uiSettings = mMap.getUiSettings();
         uiSettings.setCompassEnabled(true);
@@ -301,7 +303,10 @@ public class MainActivity extends AppCompatActivity implements OnMapReadyCallbac
     }
     @Override
     public boolean onMarkerClick(final Marker marker) {
-        Toast.makeText(this,marker.getTitle(),Toast.LENGTH_SHORT).show();
+        Ubicacion ubicacion = (Ubicacion) marker.getTag();
+        Intent intent = new Intent(this, Comments.class);
+        intent.putExtra("UBICACION", ubicacion);
+        startActivity(intent);
         return true;
     }
     public void cargarUbicaciones(){

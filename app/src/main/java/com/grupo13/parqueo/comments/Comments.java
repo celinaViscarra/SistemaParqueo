@@ -10,7 +10,9 @@ import androidx.recyclerview.widget.RecyclerView;
 import com.google.android.gms.auth.api.signin.GoogleSignIn;
 import com.google.android.gms.auth.api.signin.GoogleSignInAccount;
 import com.google.android.gms.auth.api.signin.GoogleSignInClient;
+import com.google.android.gms.auth.api.signin.GoogleSignInOptions;
 import com.grupo13.parqueo.R;
+import com.grupo13.parqueo.modelo.Ubicacion;
 
 import java.util.ArrayList;
 
@@ -22,15 +24,26 @@ public class Comments extends AppCompatActivity {
     private ArrayList<String> nImagesUrls = new ArrayList<>();
     private ArrayList<String> nComments = new ArrayList<>();
     private GoogleSignInClient mGoogleSignInClient;
-    GoogleSignInAccount account = GoogleSignIn.getLastSignedInAccount(this);
-    String name = account.getDisplayName();
-    String email = account.getEmail();
+    String name;
+    String email;
     String image = "";
+
+    Ubicacion ubicacion;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.comments_tool);
+
+        GoogleSignInOptions gso = new GoogleSignInOptions.Builder(GoogleSignInOptions.DEFAULT_SIGN_IN)
+                .requestEmail()
+                .build();
+        mGoogleSignInClient = GoogleSignIn.getClient(this, gso);
+        GoogleSignInAccount account = GoogleSignIn.getLastSignedInAccount(this);
+        name = account.getDisplayName();
+        email = account.getEmail();
+
+        ubicacion = (Ubicacion)getIntent().getExtras().getSerializable("UBICACION");
 
         initImageBitmas();
     }

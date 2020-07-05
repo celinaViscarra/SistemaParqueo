@@ -38,7 +38,7 @@ public class    RecyclerViewAdapter extends RecyclerView.Adapter<RecyclerViewAda
         View view = LayoutInflater.from(parent.getContext()).inflate(R.layout.layout_comments, parent,
                 false);
         ViewHolder holder = new ViewHolder(view);
-        return null;
+        return holder;
     }
 
     @Override
