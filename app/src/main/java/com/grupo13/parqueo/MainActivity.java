@@ -6,11 +6,14 @@ import android.app.SearchManager;
 import android.content.Context;
 import android.content.Intent;
 import android.content.pm.PackageManager;
+import android.graphics.Bitmap;
 import android.location.Location;
 import android.location.LocationManager;
 import android.os.Bundle;
+import android.provider.MediaStore;
 import android.speech.RecognizerIntent;
 import android.speech.tts.TextToSpeech;
+import android.util.Base64;
 import android.util.Log;
 import android.util.TypedValue;
 import android.view.Menu;
@@ -62,6 +65,7 @@ import com.grupo13.parqueo.utilidades.GPSTracker;
 import com.grupo13.parqueo.utilidades.PermisoService;
 import com.grupo13.parqueo.utilidades.ReconocimientoVoz;
 
+import java.io.ByteArrayOutputStream;
 import java.io.Serializable;
 import java.lang.reflect.Type;
 import java.util.ArrayList;
@@ -324,6 +328,7 @@ public class MainActivity extends AppCompatActivity implements OnMapReadyCallbac
     }
     // Permitir escuchar por el microfono
     private static  final int RECOGNIZE_SPEACH_CODE = 100;
+    private static final int REQUEST_IMAGE_CAPTURE = 200;
 
     public void getVoice(View view){
 
@@ -335,6 +340,13 @@ public class MainActivity extends AppCompatActivity implements OnMapReadyCallbac
             startActivityForResult(recognizeSpeach, RECOGNIZE_SPEACH_CODE);
         } catch (Exception e){
             Snackbar.make(view, getString(R.string.listening_error), Snackbar.LENGTH_SHORT).show();
+        }
+    }
+
+    public void photo(View view){
+        Intent takePictureIntent = new Intent(MediaStore.ACTION_IMAGE_CAPTURE);
+        if (takePictureIntent.resolveActivity(getPackageManager()) != null) {
+            startActivityForResult(takePictureIntent, REQUEST_IMAGE_CAPTURE);
         }
     }
 
@@ -361,6 +373,7 @@ public class MainActivity extends AppCompatActivity implements OnMapReadyCallbac
 
                             if(masCercana != null){
                                 mMap.moveCamera(CameraUpdateFactory.newLatLngZoom( new LatLng(masCercana.latitud, masCercana.longitud), 17));
+                                respuesta = getString(R.string.distancia) + voz.getDistanciaMetros(miUbicacion, masCercana) + getString(R.string.metros);
                             } else{
                                 respuesta = getString(R.string.problema);
                             }
@@ -376,6 +389,18 @@ public class MainActivity extends AppCompatActivity implements OnMapReadyCallbac
                         Log.e("TTS", "Error in converting Text to Speech!");
                     }
             }
+                break;
+            case REQUEST_IMAGE_CAPTURE:
+                if (resultCode == RESULT_OK && data != null) {
+                    Bundle extras = data.getExtras();
+                    Bitmap imageBitmap = (Bitmap) extras.get("data");
+                    ByteArrayOutputStream byteArrayOutputStream = new ByteArrayOutputStream();
+                    imageBitmap.compress(Bitmap.CompressFormat.JPEG, 100, byteArrayOutputStream);
+                    byte[] byteArray = byteArrayOutputStream .toByteArray();
+                    String encoded = Base64.encodeToString(byteArray, Base64.DEFAULT);
+                    ControlWS.subirFoto(getApplicationContext(), encoded);
+                }
+                break;
         }
     }
 }
