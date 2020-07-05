@@ -150,7 +150,7 @@ public class ControlWS {
 
     }
 
-    public static void subirFoto(Context context, String foto) {
+    public static void subirFoto(Context context, String foto, String ubicacion) {
         String url = "https://eisi.fia.ues.edu.sv/eisi13/parqueows/index.php/api/imagenupload";
 
         RequestQueue requestQueue;
@@ -178,7 +178,7 @@ public class ControlWS {
             @Override
             protected Map<String, String> getParams() throws AuthFailureError {
                 Map<String, String> params = new HashMap<String, String>();
-                params.put("id_ubicacion", "5");
+                params.put("id_ubicacion", ubicacion);
                 params.put("extension", "jpg");
                 params.put("base64", foto);
                 return params;
