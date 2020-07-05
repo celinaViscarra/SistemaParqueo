@@ -48,7 +48,7 @@ public class    RecyclerViewAdapter extends RecyclerView.Adapter<RecyclerViewAda
         Glide.with(context).asBitmap().load(nImages.get(position)).into(holder.image);
         holder.imageName.setText(nImagesNames.get(position));
 
-        holder.parentLayout.setOnClickListener(new View.OnClickListener(){
+      /*  holder.parentLayout.setOnClickListener(new View.OnClickListener(){
             public void onClick(View view){
                 Log.d(TAG, "onClick: clicked on" + nImagesNames.get(position));
                 Toast.makeText(context, nImagesNames.get(position), Toast.LENGTH_SHORT).show();
@@ -61,7 +61,7 @@ public class    RecyclerViewAdapter extends RecyclerView.Adapter<RecyclerViewAda
                 Log.d(TAG, "onClick: clicked on" + nComments.get(position));
                 Toast.makeText(context, nComments.get(position), Toast.LENGTH_SHORT).show();
             }
-        });
+        });*/
     }
 
     @Override
