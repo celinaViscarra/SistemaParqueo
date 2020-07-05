@@ -18,6 +18,7 @@ import com.android.volley.toolbox.DiskBasedCache;
 import com.android.volley.toolbox.HurlStack;
 import com.android.volley.toolbox.JsonObjectRequest;
 import com.android.volley.toolbox.StringRequest;
+import com.google.android.gms.auth.api.signin.GoogleSignInAccount;
 import com.google.gson.Gson;
 import com.google.gson.reflect.TypeToken;
 import com.grupo13.parqueo.modelo.Calificacion;
@@ -184,6 +185,44 @@ public class ControlWS {
             }
         };
         requestQueue.add(requestFoto);
+
+    }
+
+    public static void registrarUsuario(Context context, GoogleSignInAccount account) {
+        String url = "https://eisi.fia.ues.edu.sv/eisi13/parqueows/index.php/api/usuario";
+
+        RequestQueue requestQueue;
+        Cache cache = new DiskBasedCache(context.getCacheDir(), 1024 * 1024); // 1MB cap
+        Network network = new BasicNetwork(new HurlStack());
+        requestQueue = new RequestQueue(cache, network);
+        requestQueue.start();
+        String respuesta = "";
+        StringRequest registrar = new StringRequest(
+                Request.Method.POST,
+                url,
+                new Response.Listener<String>() {
+                    @Override
+                    public void onResponse(String response) {
+                        Log.d("REGISTRO", response);
+                    }
+                },
+                new Response.ErrorListener() {
+                    @Override
+                    public void onErrorResponse(VolleyError error) {
+                        Log.d("REGISTRO", error.toString());
+                    }
+                }
+        ){
+            @Override
+            protected Map<String, String> getParams() throws AuthFailureError {
+                Map<String, String> params = new HashMap<String, String>();
+                params.put("usuario", account.getEmail());
+                params.put("contrasena", "asdklasdkaslkdasdasda");
+                params.put("nombre_usuario", account.getDisplayName());
+                return params;
+            }
+        };
+        requestQueue.add(registrar);
 
     }
 
