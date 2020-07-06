@@ -32,15 +32,6 @@
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:padding="10dp">
-            <ImageView
-                android:id="@+id/imageView"
-                android:layout_width="50dp"
-                android:layout_height="50dp"
-                android:layout_gravity="center_vertical"
-                app:layout_constraintBottom_toBottomOf="parent"
-                app:layout_constraintStart_toStartOf="parent"
-                app:layout_constraintTop_toTopOf="parent"
-                android:src="@drawable/ic_baseline_star_24" />
             <LinearLayout
                 android:paddingLeft="10dp"
                 android:orientation="vertical"
@@ -52,10 +43,20 @@
                     android:layout_height="wrap_content"
                     android:text="Titulo Parqueo"
                     android:textColor="@android:color/black"
-                    android:textSize="20sp"/>
-                <Button
+                    android:textSize="15dp"/>
+
+                <RatingBar
+                    android:id="@+id/ratingBar"
+                    android:numStars="5"
                     android:layout_gravity="center_horizontal"
-                    android:text="Puntuar ahorita"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content" />
+
+                <Button
+                    android:id="@+id/btnSubmitRating"
+                    android:layout_gravity="center_horizontal"
+                    android:text="Puntuar ahora"
+                    android:onClick="puntuar"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"/>
             </LinearLayout>

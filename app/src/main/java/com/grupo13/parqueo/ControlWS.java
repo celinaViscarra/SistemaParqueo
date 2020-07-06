@@ -23,6 +23,7 @@ import com.android.volley.toolbox.Volley;
 import com.google.android.gms.auth.api.signin.GoogleSignInAccount;
 import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
+import com.google.gson.JsonObject;
 import com.google.gson.reflect.TypeToken;
 import com.grupo13.parqueo.comments.Comments;
 import com.grupo13.parqueo.modelo.Calificacion;
@@ -222,6 +223,55 @@ public class ControlWS {
             //Con esto detectamos errores 404 que vengan del WS
             //Toast.makeText(context, "404",Toast.LENGTH_SHORT).show();
         }
+    }
+    public static void subirPuntuacion(Context context, String ubicacion, String puntuacion, String usuario, UbicacionDetalleActivity ubi){
+        String url = "https://eisi.fia.ues.edu.sv/eisi13/parqueows/index.php/api/calificacion";
+        ControlBD helper = ControlBD.getInstance(context);
+        RequestQueue requestQueue;
+        Cache cache = new DiskBasedCache(context.getCacheDir(), 1024 * 1024); // 1MB cap
+        Network network = new BasicNetwork(new HurlStack());
+        requestQueue = new RequestQueue(cache, network);
+        requestQueue.start();
+        String respuesta = "";
+        StringRequest comentario = new StringRequest(
+                Request.Method.POST,
+                url,
+                new Response.Listener<String>() {
+                    @Override
+                    public void onResponse(String response) {
+                        try {
+                            JSONObject resultado = new JSONObject(response);
+                            if(resultado.getString("resultado").equals("1")){
+                                Gson gson = new Gson();
+                                Calificacion calif = gson.fromJson(resultado.getJSONObject("insertado").toString(),Calificacion.class);
+                                helper.calificacionDao().insertarCalificacion(calif);
+                                ubi.obtenerPuntuacion();
+                                Toast.makeText(context, "Calificado con exito",Toast.LENGTH_SHORT).show();
+                            }else{
+                                Toast.makeText(context, "Error al mandar el mensaje.", Toast.LENGTH_LONG).show();
+                            }
+                        } catch (JSONException e) {
+                            e.printStackTrace();
+                        }
+                    }
+                },
+                new Response.ErrorListener() {
+                    @Override
+                    public void onErrorResponse(VolleyError error) {
+                        Log.d("FALLO CONEXION", error.toString());
+                    }
+                }
+        ) {
+            @Override
+            protected Map<String, String> getParams() throws AuthFailureError {
+                Map<String, String> params = new HashMap<String, String>();
+                params.put("id_ubicacion",ubicacion);
+                params.put("usuario",usuario);
+                params.put("puntuacion",puntuacion);
+                return params;
+            }
+        };
+        requestQueue.add(comentario);
     }
 
     public static void subirComentario(Context context, String ubicacion, String usuario, String texto, Comments comments) {

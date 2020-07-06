@@ -48,7 +48,6 @@ public class Comments extends AppCompatActivity {
     private GoogleSignInClient mGoogleSignInClient;
     String name;
     String email;
-    String image = "";
     ControlBD helper = ControlBD.getInstance(this);
 
     Ubicacion ubicacion;
