@@ -15,6 +15,9 @@ public interface ImagenDao {
     @Query("SELECT * FROM Imagen")
     List<Imagen> obtenerImagenes();
 
+    @Query("SELECT * FROM Imagen WHERE id_ubicacion=:id_ubicacion")
+    List<Imagen> obtenerImagenesPorUbicacion(int id_ubicacion);
+
     @Query("SELECT * FROM Imagen WHERE id_imagen=:id_imagen")
     Imagen consultarImagen(int id_imagen);
 

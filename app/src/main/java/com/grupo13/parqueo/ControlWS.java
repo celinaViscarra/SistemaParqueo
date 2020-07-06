@@ -24,6 +24,7 @@ import com.google.android.gms.auth.api.signin.GoogleSignInAccount;
 import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
 import com.google.gson.reflect.TypeToken;
+import com.grupo13.parqueo.comments.Comments;
 import com.grupo13.parqueo.modelo.Calificacion;
 import com.grupo13.parqueo.modelo.Comentario;
 import com.grupo13.parqueo.modelo.Imagen;
@@ -210,7 +211,7 @@ public class ControlWS {
         }
     }
 
-    public static void subirComentario(Context context, String ubicacion, String usuario, String texto) {
+    public static void subirComentario(Context context, String ubicacion, String usuario, String texto, Comments comments) {
         String url = "https://eisi.fia.ues.edu.sv/eisi13/parqueows/index.php/api/comentario";
         ControlBD helper = ControlBD.getInstance(context);
         RequestQueue requestQueue;
@@ -235,9 +236,10 @@ public class ControlWS {
                                 nuevo.texto = texto;
                                 nuevo.usuario = usuario;
                                 helper.comentarioDao().insertarComentario(nuevo);
-                                //Toast.makeText(context, "El mensaje se envio con exito.", Toast.LENGTH_LONG).show();
+                                Toast.makeText(context, "El mensaje se envio con exito.", Toast.LENGTH_LONG).show();
+                                comments.initData();
                             }else{
-                                //Toast.makeText(context, "Error al mandar el mensaje.", Toast.LENGTH_LONG).show();
+                                Toast.makeText(context, "Error al mandar el mensaje.", Toast.LENGTH_LONG).show();
                             }
                         } catch (JSONException e) {
                             e.printStackTrace();

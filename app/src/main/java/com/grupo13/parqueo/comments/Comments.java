@@ -40,9 +40,9 @@ public class Comments extends AppCompatActivity {
     private static final String TAG = "MainActivity";
     EditText texto;
     //vars
-    private ArrayList<String> nNames = new ArrayList<>();
-    private ArrayList<String> nImagesUrls = new ArrayList<>();
-    private ArrayList<String> nComments = new ArrayList<>();
+    private ArrayList<String> nNames;
+    private ArrayList<String> nImagesUrls;
+    private ArrayList<String> nComments;
     private GoogleSignInClient mGoogleSignInClient;
     String name;
     String email;
@@ -65,47 +65,23 @@ public class Comments extends AppCompatActivity {
         email = account.getEmail();
 
         ubicacion = (Ubicacion)getIntent().getExtras().getSerializable("UBICACION");
-        initImageBitmas();
+        initData();
+        initGallery();
     }
 
-    private void initImageBitmas(){
+    public void initData(){
+        nNames = new ArrayList<>();
+        nComments = new ArrayList<>();
+        nImagesUrls = new ArrayList<>();
+
         //for add the images
         int ubication = ubicacion.id_ubicacion;
         List<Comentario> comments = helper.comentarioDao().obtenerComentariosPorUbicacion(ubication);
-
-
         for(Comentario comentarioActual: comments){
             nComments.add(comentarioActual.texto);
             nNames.add(comentarioActual.usuario);
             nImagesUrls.add("https://pm1.narvii.com/7093/84196c693eba950461690eb36ad46bf1e7cb1ae1r1-332-363v2_uhq.jpg");
         }
-
-
-        /*
-        nComments.add("FEO");
-        nImagesUrls.add("https://pm1.narvii.com/7093/84196c693eba950461690eb36ad46bf1e7cb1ae1r1-332-363v2_uhq.jpg");
-        nNames.add("LUCIA ZAMORANO");
-
-        nComments.add("HERMOSO");
-        nImagesUrls.add("https://st-listas.20minutos.es/images/2015-03/394837/4670373_640px.jpg");
-        nNames.add("MARIA DE LOS ANGELES");
-
-        nComments.add("HORRIBLE");
-        nImagesUrls.add("https://pm1.narvii.com/6354/1ab557c7209ee79663a32dc26cd888f9e67e6fa9_hq.jpg");
-        nNames.add("CASIMIRA DEL SOL");
-
-        nComments.add("PRECIOSOOOOOOOO");
-        nImagesUrls.add("https://pm1.narvii.com/6354/5019d49dc977fbadaf59164597b590014ee882b0_hq.jpg");
-        nNames.add("CATALINA VEGANA");
-
-        nComments.add("NO, JAMAS REGRESARE");
-        nImagesUrls.add("https://cellularnews.com/wp-content/uploads/2020/04/spongebob-and-patrick-yellow-hearts-325x485.jpg");
-        nNames.add("PATRICIO ESTRELLA");
-
-        nComments.add("BIEN");
-        nImagesUrls.add("https://www.thqnordic.com/sites/default/files/games/gallery/SpongeBob_BfBB_00.jpg");
-        nNames.add("TORONJA NARANJA");
-        **/
 
         //calling the recyclerview
         initRecyclerView();
@@ -118,7 +94,9 @@ public class Comments extends AppCompatActivity {
         RecyclerViewAdapter adapter = new RecyclerViewAdapter(this, nNames, nImagesUrls, nComments);
         recyclerView.setAdapter(adapter);
         recyclerView.setLayoutManager(new LinearLayoutManager(this));
+    }
 
+    private void initGallery(){
         RecyclerView galeria = findViewById(R.id.galeria);
         RecyclerAdapterGallery adapterGaleria = new RecyclerAdapterGallery(this, ubicacion);
         galeria.setAdapter(adapterGaleria);
@@ -157,25 +135,13 @@ public class Comments extends AppCompatActivity {
     public void agregarComentario(View v){
         String comentario = texto.getText().toString();
         String ubication = String.valueOf(ubicacion.id_ubicacion);
-        boolean resultado = false;
-        String respuesta = "";
 
         if (comentario.equals(null) || comentario.equals("")) {
-            Log.d("iftrue", "seem to be true");
-            String mensaje = "Error al ingresar mensaje";
+            String mensaje = "Error al insertar comentario: campo vacío.";
             Toast.makeText(this, mensaje, Toast.LENGTH_LONG).show();
         } else {
-            Log.d("iffalse", "seem to be false");
-            ControlWS.subirComentario(getApplicationContext(), ubication, email, comentario);
-            if(resultado== true){
-                respuesta = "Comentario no guardado";
-                Toast.makeText(this, respuesta, Toast.LENGTH_LONG).show();
-            }else{
-                respuesta = "Comentario guardado";
-                Toast.makeText(this, respuesta, Toast.LENGTH_LONG).show();
-            }
+            ControlWS.subirComentario(getApplicationContext(), ubication, email, comentario, Comments.this);
         }
-        //ControlWS.subirComentario(this, String.valueOf(ubicacion.id_ubicacion),email, texto.getText().toString());
     }
 
 }

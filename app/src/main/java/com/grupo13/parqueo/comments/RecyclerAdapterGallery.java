@@ -36,12 +36,7 @@ public class RecyclerAdapterGallery extends RecyclerView.Adapter<RecyclerAdapter
         this.context = context;
         this.ubicacion = ubicacion;
 
-        List<Imagen> todas = ControlBD.getInstance(context).imagenDao().obtenerImagenes();
-        for (Imagen imagen: todas){
-            if (imagen.id_ubicacion == ubicacion.id_ubicacion){Log.d("PASANDO", "HOLAAA" + imagenes.size());
-                imagenes.add(imagen);}
-        }
-        Log.d("PASANDO", "HOLAAA" + imagenes.size());
+        imagenes = ControlBD.getInstance(context).imagenDao().obtenerImagenesPorUbicacion(ubicacion.id_ubicacion);
     }
 
     @NonNull
