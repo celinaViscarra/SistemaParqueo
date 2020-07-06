@@ -99,6 +99,13 @@ public class Comments extends AppCompatActivity {
         RecyclerViewAdapter adapter = new RecyclerViewAdapter(this, nNames, nImagesUrls, nComments);
         recyclerView.setAdapter(adapter);
         recyclerView.setLayoutManager(new LinearLayoutManager(this));
+
+        RecyclerView galeria = findViewById(R.id.galeria);
+        RecyclerAdapterGallery adapterGaleria = new RecyclerAdapterGallery(this, ubicacion);
+        galeria.setAdapter(adapterGaleria);
+        LinearLayoutManager manager = new LinearLayoutManager(this, LinearLayoutManager.HORIZONTAL, false);
+
+        galeria.setLayoutManager(manager);
     }
 
     private static final int REQUEST_IMAGE_CAPTURE = 200;
