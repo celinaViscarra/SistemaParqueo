@@ -1,5 +1,6 @@
 package com.grupo13.parqueo.parqueos;
 
+import androidx.appcompat.app.ActionBar;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
@@ -24,6 +25,8 @@ public class ParqueoListActivity extends AppCompatActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_parqueo_list);
+        getSupportActionBar().setDisplayOptions(ActionBar.DISPLAY_SHOW_CUSTOM);
+        getSupportActionBar().setCustomView(R.layout.abs_layout);
         ButterKnife.bind(this);
         helper = ControlBD.getInstance(this);
         Ubicacion ubicacion = (Ubicacion) getIntent().getExtras().get("UBICACION");
