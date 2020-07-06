@@ -243,7 +243,7 @@ public class ControlWS {
         }
     }
 
-    public static void subirComentario(Context context, String ubicacion, String idUsuario, String texto){
+    public static void subirComentario(Context context, String ubicacion, String usuario, String texto){
         String url = "https://eisi.fia.ues.edu.sv/eisi13/parqueows/index.php/api/comentario";
 
         RequestQueue requestQueue;
@@ -271,8 +271,8 @@ public class ControlWS {
             @Override
             protected Map<String, String> getParams() throws AuthFailureError {
                 Map<String, String> params = new HashMap<String, String>();
-                params.put("id_usuario", idUsuario);
-                params.put("id_ubicacion", ubicacion);
+                params.put("id_usuario", usuario);
+                params.put("id_ubicacion", String.valueOf(ubicacion));
                 params.put("texto", texto);
                 return params;
             }

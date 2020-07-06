@@ -9,6 +9,8 @@ import android.speech.tts.TextToSpeech;
 import android.util.Base64;
 import android.util.Log;
 import android.view.View;
+import android.widget.EditText;
+import android.widget.Toast;
 
 import androidx.annotation.Nullable;
 import androidx.appcompat.app.AppCompatActivity;
@@ -34,6 +36,7 @@ import java.util.List;
 public class Comments extends AppCompatActivity {
 
     private static final String TAG = "MainActivity";
+    EditText texto;
     //vars
     private ArrayList<String> nNames = new ArrayList<>();
     private ArrayList<String> nImagesUrls = new ArrayList<>();
@@ -96,6 +99,7 @@ public class Comments extends AppCompatActivity {
     private void initRecyclerView(){
         Log.d(TAG, "initRecyclerView: init recyclerview.");
         RecyclerView recyclerView = findViewById(R.id.recycler_view);
+        texto = (EditText) findViewById(R.id.comment);
         RecyclerViewAdapter adapter = new RecyclerViewAdapter(this, nNames, nImagesUrls, nComments);
         recyclerView.setAdapter(adapter);
         recyclerView.setLayoutManager(new LinearLayoutManager(this));
@@ -136,7 +140,14 @@ public class Comments extends AppCompatActivity {
     }
 
     public void agregarComentario(View v){
-
+        String comentario = texto.getText().toString();
+        String ubication = String.valueOf(ubicacion.id_ubicacion);
+        if(comentario != null){
+            ControlWS.subirComentario(getApplicationContext(), ubication, email, comentario);
+        }else{
+            String mensaje = "Error al ingresar mensaje";
+            Toast.makeText(this, mensaje, Toast.LENGTH_LONG).show();
+        }
     }
 
 }
