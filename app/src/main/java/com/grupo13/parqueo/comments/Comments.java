@@ -135,6 +135,8 @@ public class Comments extends AppCompatActivity {
         }
     }
 
-    public void agregarComentario(View v){}
+    public void agregarComentario(View v){
+
+    }
 
 }

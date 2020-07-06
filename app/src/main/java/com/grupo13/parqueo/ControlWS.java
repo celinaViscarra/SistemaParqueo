@@ -253,7 +253,7 @@ public class ControlWS {
         requestQueue.start();
         String respuesta = "";
         StringRequest comentario = new StringRequest(
-                Request.Method.PUT,
+                Request.Method.POST,
                 url,
                 new Response.Listener<String>() {
                     @Override
