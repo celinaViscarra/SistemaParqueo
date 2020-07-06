@@ -142,12 +142,14 @@ public class Comments extends AppCompatActivity {
     public void agregarComentario(View v){
         String comentario = texto.getText().toString();
         String ubication = String.valueOf(ubicacion.id_ubicacion);
+
         if(comentario != null){
             ControlWS.subirComentario(getApplicationContext(), ubication, email, comentario);
         }else{
             String mensaje = "Error al ingresar mensaje";
             Toast.makeText(this, mensaje, Toast.LENGTH_LONG).show();
         }
+        //ControlWS.subirComentario(this, String.valueOf(ubicacion.id_ubicacion),email, texto.getText().toString());
     }
 
 }
