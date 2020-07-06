@@ -44,6 +44,7 @@ import java.util.Locale;
 import java.util.Map;
 
 public class ControlWS {
+    public static final String ASSETS_URL = "https://eisi.fia.ues.edu.sv/eisi13/parqueows/assets/";
     public static void traerDatos(Context context, MainActivity main){
         String url = "https://eisi.fia.ues.edu.sv/eisi13/parqueows/index.php/api/";
         ControlBD helper = ControlBD.getInstance(context);
@@ -271,7 +272,7 @@ public class ControlWS {
             @Override
             protected Map<String, String> getParams() throws AuthFailureError {
                 Map<String, String> params = new HashMap<String, String>();
-                params.put("id_usuario", usuario);
+                params.put("usuario", usuario);
                 params.put("id_ubicacion", String.valueOf(ubicacion));
                 params.put("texto", texto);
                 return params;
