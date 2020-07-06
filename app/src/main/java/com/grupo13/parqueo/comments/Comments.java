@@ -23,8 +23,10 @@ import com.google.android.gms.auth.api.signin.GoogleSignInClient;
 import com.google.android.gms.auth.api.signin.GoogleSignInOptions;
 import com.google.android.gms.maps.CameraUpdateFactory;
 import com.google.android.gms.maps.model.LatLng;
+import com.grupo13.parqueo.ControlBD;
 import com.grupo13.parqueo.ControlWS;
 import com.grupo13.parqueo.R;
+import com.grupo13.parqueo.modelo.Comentario;
 import com.grupo13.parqueo.modelo.Ubicacion;
 import com.grupo13.parqueo.utilidades.GPSTracker;
 import com.grupo13.parqueo.utilidades.ReconocimientoVoz;
@@ -45,6 +47,7 @@ public class Comments extends AppCompatActivity {
     String name;
     String email;
     String image = "";
+    ControlBD helper = ControlBD.getInstance(this);
 
     Ubicacion ubicacion;
 
@@ -62,13 +65,23 @@ public class Comments extends AppCompatActivity {
         email = account.getEmail();
 
         ubicacion = (Ubicacion)getIntent().getExtras().getSerializable("UBICACION");
-
         initImageBitmas();
     }
 
     private void initImageBitmas(){
         //for add the images
+        int ubication = ubicacion.id_ubicacion;
+        List<Comentario> comments = helper.comentarioDao().obtenerComentariosPorUbicacion(ubication);
 
+
+        for(Comentario comentarioActual: comments){
+            nComments.add(comentarioActual.texto);
+            nNames.add(comentarioActual.usuario);
+            nImagesUrls.add("https://pm1.narvii.com/7093/84196c693eba950461690eb36ad46bf1e7cb1ae1r1-332-363v2_uhq.jpg");
+        }
+
+
+        /*
         nComments.add("FEO");
         nImagesUrls.add("https://pm1.narvii.com/7093/84196c693eba950461690eb36ad46bf1e7cb1ae1r1-332-363v2_uhq.jpg");
         nNames.add("LUCIA ZAMORANO");
@@ -92,6 +105,8 @@ public class Comments extends AppCompatActivity {
         nComments.add("BIEN");
         nImagesUrls.add("https://www.thqnordic.com/sites/default/files/games/gallery/SpongeBob_BfBB_00.jpg");
         nNames.add("TORONJA NARANJA");
+        **/
+
         //calling the recyclerview
         initRecyclerView();
     }
