@@ -31,7 +31,7 @@ import java.lang.reflect.Method;
         Parqueo.class,
         Ubicacion.class,
         Usuario.class
-},exportSchema = false, version = 4)
+},exportSchema = false, version = 5)
 @TypeConverters({ConversorFecha.class})
 public abstract class ControlBD extends RoomDatabase {
     private static final String DB_NAME = "grupo13_parqueo.db";

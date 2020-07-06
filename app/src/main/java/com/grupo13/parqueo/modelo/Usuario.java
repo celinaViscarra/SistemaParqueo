@@ -13,6 +13,7 @@ public class Usuario {
     public String contrasena;
     @NonNull
     public String nombre_usuario;
+    public String url_imagen;
 
     public Usuario(){}
 

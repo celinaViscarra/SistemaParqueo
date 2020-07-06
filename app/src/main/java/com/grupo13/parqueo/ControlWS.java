@@ -2,6 +2,7 @@ package com.grupo13.parqueo;
 
 import android.app.Activity;
 import android.content.Context;
+import android.net.Uri;
 import android.util.Log;
 import android.widget.Toast;
 
@@ -38,6 +39,8 @@ import org.json.JSONException;
 import org.json.JSONObject;
 
 import java.lang.reflect.Type;
+import java.security.MessageDigest;
+import java.security.NoSuchAlgorithmException;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
@@ -208,7 +211,12 @@ public class ControlWS {
             protected Map<String, String> getParams() throws AuthFailureError {
                 Map<String, String> params = new HashMap<String, String>();
                 params.put("usuario", account.getEmail());
-                params.put("contrasena", "asdklasdkaslkdasdasda");
+                params.put("contrasena", md5(account.getEmail()));
+                Uri photoURL = account.getPhotoUrl();
+                if(photoURL != null)
+                    params.put("url_imagen",photoURL.toString());
+                else
+                    params.put("url_imagen","https://www.gravatar.com/avatar/asdf");
                 params.put("nombre_usuario", account.getDisplayName());
                 return params;
             }
@@ -326,5 +334,25 @@ public class ControlWS {
             }
         };
         requestQueue.add(comentario);
+    }
+
+
+    private static String md5(String s) {
+        try {
+            // Create MD5 Hash
+            MessageDigest digest = java.security.MessageDigest.getInstance("MD5");
+            digest.update(s.getBytes());
+            byte messageDigest[] = digest.digest();
+
+            // Create Hex String
+            StringBuffer hexString = new StringBuffer();
+            for (int i = 0; i < messageDigest.length; i++)
+                hexString.append(Integer.toHexString(0xFF & messageDigest[i]));
+            return hexString.toString();
+
+        } catch (NoSuchAlgorithmException e) {
+            e.printStackTrace();
+        }
+        return "";
     }
 }
