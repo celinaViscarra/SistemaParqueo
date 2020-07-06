@@ -212,7 +212,7 @@ public class ControlWS {
 
     public static void subirComentario(Context context, String ubicacion, String usuario, String texto) {
         String url = "https://eisi.fia.ues.edu.sv/eisi13/parqueows/index.php/api/comentario";
-
+        ControlBD helper = ControlBD.getInstance(context);
         RequestQueue requestQueue;
         Cache cache = new DiskBasedCache(context.getCacheDir(), 1024 * 1024); // 1MB cap
         Network network = new BasicNetwork(new HurlStack());
@@ -226,6 +226,22 @@ public class ControlWS {
                     @Override
                     public void onResponse(String response) {
                         Log.d("COMENTARIO ENVIADO", response);
+                        try {
+                            JSONObject resultado = new JSONObject(response);
+                            if(resultado.getString("resultado").equals("1")){
+                                Comentario nuevo = new Comentario();
+                                nuevo.id_comentario = Integer.parseInt(resultado.getString("id_comentario"));
+                                nuevo.id_ubicacion = Integer.parseInt(ubicacion);
+                                nuevo.texto = texto;
+                                nuevo.usuario = usuario;
+                                helper.comentarioDao().insertarComentario(nuevo);
+                                //Toast.makeText(context, "El mensaje se envio con exito.", Toast.LENGTH_LONG).show();
+                            }else{
+                                //Toast.makeText(context, "Error al mandar el mensaje.", Toast.LENGTH_LONG).show();
+                            }
+                        } catch (JSONException e) {
+                            e.printStackTrace();
+                        }
                     }
                 },
                 new Response.ErrorListener() {
