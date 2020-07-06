@@ -19,8 +19,8 @@ public class Imagen {
     //Estos dos atributos van como nulos porque de cualquiera de estos puede derivarse.
     @SerializedName("id_ubicacion")
     public int id_ubicacion;
-    @SerializedName("id_comentario")
-    public int id_comentario;
+    @SerializedName("es_galeria")
+    public int es_galeria;
 
     @NonNull
     @SerializedName("fecha_imagen")
@@ -35,10 +35,10 @@ public class Imagen {
 
     public  Imagen(){}
 
-    public Imagen(int id_imagen, int id_ubicacion, int id_comentario, Calendar fecha_imagen, String filename){
+    public Imagen(int id_imagen, int id_ubicacion, int es_galeria, Calendar fecha_imagen, String filename){
         this.id_imagen = id_imagen;
         this.id_ubicacion = id_ubicacion;
-        this.id_comentario = id_comentario;
+        this.es_galeria = es_galeria;
         this.fecha_imagen = fecha_imagen;
         this.filename = filename;
     }

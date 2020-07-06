@@ -99,13 +99,8 @@ public class ControlWS {
                                 JSONObject obj = arrayImagenes.getJSONObject(i);
                                 Imagen pivote = new Imagen();
                                 pivote.id_imagen = Integer.parseInt(obj.getString("id_imagen"));
-                                Log.v("Ingresando: ", String.valueOf(pivote.id_imagen));
-                                String id_ubi = obj.getString("id_ubicacion");
-                                String id_coment = obj.getString("id_comentario");
-                                if(!id_ubi.equals("null")) pivote.id_ubicacion = Integer.parseInt(id_ubi);
-                                if(!id_coment.equals("null")) pivote.id_comentario = Integer.parseInt(id_coment);
-                                //pivote.id_ubicacion = obj.isNull("id_ubicacion") ? null : Integer.parseInt(obj.getString("id_ubicacion"));
-                                //pivote.id_comentario = obj.isNull("id_comentario") ? null : Integer.parseInt(obj.getString("id_comentario"));
+                                pivote.id_ubicacion = Integer.parseInt(obj.getString("id_ubicacion"));
+                                pivote.es_galeria = Integer.parseInt(obj.getString("es_galeria"));
                                 pivote.fecha_imagen = Calendar.getInstance();
                                 SimpleDateFormat dateParser = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss", Locale.ENGLISH);
                                 pivote.fecha_imagen.setTime(dateParser.parse(obj.getString("fecha_imagen")));

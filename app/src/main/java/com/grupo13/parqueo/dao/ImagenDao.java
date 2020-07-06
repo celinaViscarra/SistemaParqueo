@@ -24,9 +24,6 @@ public interface ImagenDao {
     @Query("SELECT * FROM Imagen WHERE id_ubicacion=:id_ubicacion")
     Imagen consultarImagenPorUbicacion(int id_ubicacion);
 
-    @Query("SELECT * FROM Imagen WHERE id_comentario=:id_comentario")
-    Imagen consultarImagenPorComentario(int id_comentario);
-
     @Insert
     long insertarImagen(Imagen imagen);
 

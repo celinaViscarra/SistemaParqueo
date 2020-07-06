@@ -32,6 +32,8 @@ import com.grupo13.parqueo.utilidades.GPSTracker;
 import com.grupo13.parqueo.utilidades.ReconocimientoVoz;
 
 import java.io.ByteArrayOutputStream;
+import java.security.MessageDigest;
+import java.security.NoSuchAlgorithmException;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -64,12 +66,12 @@ public class Comments extends AppCompatActivity {
         name = account.getDisplayName();
         email = account.getEmail();
 
-        ubicacion = (Ubicacion)getIntent().getExtras().getSerializable("UBICACION");
+        ubicacion = (Ubicacion) getIntent().getExtras().getSerializable("UBICACION");
         initData();
         initGallery();
     }
 
-    public void initData(){
+    public void initData() {
         nNames = new ArrayList<>();
         nComments = new ArrayList<>();
         nImagesUrls = new ArrayList<>();
@@ -77,18 +79,18 @@ public class Comments extends AppCompatActivity {
         //for add the images
         int ubication = ubicacion.id_ubicacion;
         List<Comentario> comments = helper.comentarioDao().obtenerComentariosPorUbicacion(ubication);
-        for(Comentario comentarioActual: comments){
+        for (Comentario comentarioActual : comments) {
             nComments.add(comentarioActual.texto);
-            nNames.add(comentarioActual.usuario);
-            nImagesUrls.add("https://pm1.narvii.com/7093/84196c693eba950461690eb36ad46bf1e7cb1ae1r1-332-363v2_uhq.jpg");
+            nNames.add(comentarioActual.usuario.split("@")[0]);
+            String hashGravatar = md5(comentarioActual.usuario);
+            nImagesUrls.add("https://www.gravatar.com/avatar/"+hashGravatar);
         }
 
         //calling the recyclerview
         initRecyclerView();
     }
 
-    private void initRecyclerView(){
-        Log.d(TAG, "initRecyclerView: init recyclerview.");
+    private void initRecyclerView() {
         RecyclerView recyclerView = findViewById(R.id.recycler_view);
         texto = (EditText) findViewById(R.id.comment);
         RecyclerViewAdapter adapter = new RecyclerViewAdapter(this, nNames, nImagesUrls, nComments);
@@ -96,7 +98,7 @@ public class Comments extends AppCompatActivity {
         recyclerView.setLayoutManager(new LinearLayoutManager(this));
     }
 
-    private void initGallery(){
+    private void initGallery() {
         RecyclerView galeria = findViewById(R.id.galeria);
         RecyclerAdapterGallery adapterGaleria = new RecyclerAdapterGallery(this, ubicacion);
         galeria.setAdapter(adapterGaleria);
@@ -106,7 +108,8 @@ public class Comments extends AppCompatActivity {
     }
 
     private static final int REQUEST_IMAGE_CAPTURE = 200;
-    public void photo(View view){
+
+    public void photo(View view) {
         Intent takePictureIntent = new Intent(MediaStore.ACTION_IMAGE_CAPTURE);
         if (takePictureIntent.resolveActivity(getPackageManager()) != null) {
             startActivityForResult(takePictureIntent, REQUEST_IMAGE_CAPTURE);
@@ -117,14 +120,14 @@ public class Comments extends AppCompatActivity {
     protected void onActivityResult(int requestCode, int resultCode, @Nullable Intent data) {
         super.onActivityResult(requestCode, resultCode, data);
 
-        switch (requestCode){
+        switch (requestCode) {
             case REQUEST_IMAGE_CAPTURE:
                 if (resultCode == RESULT_OK && data != null) {
                     Bundle extras = data.getExtras();
                     Bitmap imageBitmap = (Bitmap) extras.get("data");
                     ByteArrayOutputStream byteArrayOutputStream = new ByteArrayOutputStream();
                     imageBitmap.compress(Bitmap.CompressFormat.JPEG, 100, byteArrayOutputStream);
-                    byte[] byteArray = byteArrayOutputStream .toByteArray();
+                    byte[] byteArray = byteArrayOutputStream.toByteArray();
                     String encoded = Base64.encodeToString(byteArray, Base64.DEFAULT);
                     ControlWS.subirFoto(getApplicationContext(), encoded, String.valueOf(ubicacion.id_ubicacion));
                 }
@@ -132,7 +135,7 @@ public class Comments extends AppCompatActivity {
         }
     }
 
-    public void agregarComentario(View v){
+    public void agregarComentario(View v) {
         String comentario = texto.getText().toString();
         String ubication = String.valueOf(ubicacion.id_ubicacion);
 
@@ -142,6 +145,26 @@ public class Comments extends AppCompatActivity {
         } else {
             ControlWS.subirComentario(getApplicationContext(), ubication, email, comentario, Comments.this);
         }
+    }
+
+
+    private static String md5(String s) {
+        try {
+            // Create MD5 Hash
+            MessageDigest digest = java.security.MessageDigest.getInstance("MD5");
+            digest.update(s.getBytes());
+            byte messageDigest[] = digest.digest();
+
+            // Create Hex String
+            StringBuffer hexString = new StringBuffer();
+            for (int i = 0; i < messageDigest.length; i++)
+                hexString.append(Integer.toHexString(0xFF & messageDigest[i]));
+            return hexString.toString();
+
+        } catch (NoSuchAlgorithmException e) {
+            e.printStackTrace();
+        }
+        return "";
     }
 
 }
