@@ -142,7 +142,7 @@ public class Comments extends AppCompatActivity {
     public void agregarComentario(View v){
         String comentario = texto.getText().toString();
         String ubication = String.valueOf(ubicacion.id_ubicacion);
-        int resultado = -1;
+        boolean resultado = false;
         String respuesta = "";
 
         if (comentario.equals(null) || comentario.equals("")) {
@@ -152,7 +152,7 @@ public class Comments extends AppCompatActivity {
         } else {
             Log.d("iffalse", "seem to be false");
             ControlWS.subirComentario(getApplicationContext(), ubication, email, comentario);
-            if(resultado==1){
+            if(resultado== true){
                 respuesta = "Comentario no guardado";
                 Toast.makeText(this, respuesta, Toast.LENGTH_LONG).show();
             }else{
