@@ -27,6 +27,7 @@ public class ParqueoListActivity extends AppCompatActivity {
         ButterKnife.bind(this);
         helper = ControlBD.getInstance(this);
         Ubicacion ubicacion = (Ubicacion) getIntent().getExtras().get("UBICACION");
+        getSupportActionBar().setTitle("Parqueos de: "+ubicacion.nombre_ubicacion);
         ParqueoListAdapter parqueoListAdapter = new ParqueoListAdapter(helper.parqueoDao().obtenerParqueosPorUbicacion(ubicacion.id_ubicacion));
         rvParqueos.setAdapter(parqueoListAdapter);
         rvParqueos.setLayoutManager(new LinearLayoutManager(this));

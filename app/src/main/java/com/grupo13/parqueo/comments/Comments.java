@@ -67,6 +67,7 @@ public class Comments extends AppCompatActivity {
         email = account.getEmail();
 
         ubicacion = (Ubicacion) getIntent().getExtras().getSerializable("UBICACION");
+        getSupportActionBar().setTitle("Comentarios de "+ubicacion.nombre_ubicacion);
         initData();
         initGallery();
     }

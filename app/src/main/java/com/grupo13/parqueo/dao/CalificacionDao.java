@@ -18,6 +18,8 @@ public interface CalificacionDao {
     @Query("SELECT * FROM Calificacion WHERE id_calificacion=:id_calificacion")
     Calificacion consultarCalificacion(int id_calificacion);
 
+    @Query("SELECT AVG(puntuacion) FROM Calificacion WHERE id_ubicacion=:id_ubicacion")
+    float obtenerPromedioPorUbicacion(int id_ubicacion);
     @Insert
     long insertarCalificacion(Calificacion calificacion);
 

@@ -21,10 +21,8 @@ import butterknife.ButterKnife;
 public class UbicacionDetalleActivity extends AppCompatActivity {
     @BindView(R.id.txtNombre)
     TextView txtNombre;
-    @BindView(R.id.txtLat)
-    TextView txtLat;
-    @BindView(R.id.txtLong)
-    TextView txtLong;
+    @BindView(R.id.txtPunt)
+    TextView txtPunt;
     @BindView(R.id.imgUbicacion)
     ImageView imgUbicacion;
     Ubicacion selected;
@@ -35,10 +33,11 @@ public class UbicacionDetalleActivity extends AppCompatActivity {
         setContentView(R.layout.activity_ubicacion_detalle);
         ButterKnife.bind(this);
         selected = (Ubicacion) getIntent().getExtras().get("UBICACION");
-        txtNombre.setText("Nombre: "+selected.nombre_ubicacion);
-        txtLat.setText(String.format("Latitud: %.2f",selected.latitud));
-        txtLong.setText(String.format("Longitud: %.2f",selected.longitud));
+        txtNombre.setText(selected.nombre_ubicacion);
         helper = ControlBD.getInstance(this);
+        String puntuacion = String.format("Puntuacion: %.1f",helper.calificacionDao().obtenerPromedioPorUbicacion(selected.id_ubicacion));
+        txtPunt.setText(puntuacion);
+        getSupportActionBar().setTitle(selected.nombre_ubicacion);
         Imagen imagen = helper.imagenDao().consultarImagenPorUbicacion(selected.id_ubicacion);
         //Glide.with(this).load(ControlWS.ASSETS_URL + imagen.filename).into(imgUbicacion);
     }
