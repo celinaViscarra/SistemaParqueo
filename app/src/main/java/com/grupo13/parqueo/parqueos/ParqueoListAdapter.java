@@ -1,6 +1,7 @@
 package com.grupo13.parqueo.parqueos;
 
 import android.content.Context;
+import android.graphics.Color;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -50,6 +51,7 @@ public class ParqueoListAdapter extends RecyclerView.Adapter<ParqueoListAdapter.
         TextView txtDesc = holder.txtDesc;
         txtTitulo.setText(selected.nombre_parqueo);
         String estado = selected.ocupado == 1?"Ocupado":"Libre";
+        txtDesc.setTextColor(selected.ocupado == 1 ? Color.RED: Color.rgb(91,224,61));
         txtDesc.setText("Estado: "+ estado);
     }
 
