@@ -122,9 +122,9 @@ public class ControlWS {
 
     }
 
-    public static void subirFoto(Context context, String foto, String ubicacion) {
+    public static void subirFoto(Context context, String foto, String ubicacion, Comments comments) {
         String url = "https://eisi.fia.ues.edu.sv/eisi13/parqueows/index.php/api/imagenupload";
-
+        ControlBD helper = ControlBD.getInstance(context);
         RequestQueue requestQueue;
         Cache cache = new DiskBasedCache(context.getCacheDir(), 1024 * 1024); // 1MB cap
         Network network = new BasicNetwork(new HurlStack());
@@ -137,7 +137,24 @@ public class ControlWS {
                 new Response.Listener<String>() {
                     @Override
                     public void onResponse(String response) {
-                        Log.d("POTOGRAFIA-EXITO", response);
+                        try {
+                            JSONObject obj = new JSONObject(response);
+                            if(obj.getString("resultado").equals("1")){
+                                JSONObject imagen = obj.getJSONObject("imagen_insertada");
+                                Imagen insertada = new Imagen();
+                                insertada.id_imagen = Integer.parseInt(imagen.getString("id_imagen"));
+                                insertada.id_ubicacion = Integer.parseInt(imagen.getString("id_ubicacion"));
+                                insertada.es_galeria = Integer.parseInt(imagen.getString("es_galeria"));
+                                insertada.filename = imagen.getString("filename");
+                                insertada.fecha_imagen = Calendar.getInstance();
+                                SimpleDateFormat dateParser = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss", Locale.ENGLISH);
+                                insertada.fecha_imagen.setTime(dateParser.parse(imagen.getString("fecha_imagen")));
+                                helper.imagenDao().insertarImagen(insertada);
+                                comments.initGallery();
+                            }
+                        } catch (JSONException | ParseException e) {
+                            e.printStackTrace();
+                        }
                     }
                 },
                 new Response.ErrorListener() {
@@ -152,6 +169,7 @@ public class ControlWS {
                 Map<String, String> params = new HashMap<String, String>();
                 params.put("id_ubicacion", ubicacion);
                 params.put("extension", "jpg");
+                params.put("es_galeria","1");
                 params.put("base64", foto);
                 return params;
             }

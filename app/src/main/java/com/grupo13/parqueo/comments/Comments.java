@@ -98,7 +98,7 @@ public class Comments extends AppCompatActivity {
         recyclerView.setLayoutManager(new LinearLayoutManager(this));
     }
 
-    private void initGallery() {
+    public void initGallery() {
         RecyclerView galeria = findViewById(R.id.galeria);
         RecyclerAdapterGallery adapterGaleria = new RecyclerAdapterGallery(this, ubicacion);
         galeria.setAdapter(adapterGaleria);
@@ -129,7 +129,7 @@ public class Comments extends AppCompatActivity {
                     imageBitmap.compress(Bitmap.CompressFormat.JPEG, 100, byteArrayOutputStream);
                     byte[] byteArray = byteArrayOutputStream.toByteArray();
                     String encoded = Base64.encodeToString(byteArray, Base64.DEFAULT);
-                    ControlWS.subirFoto(getApplicationContext(), encoded, String.valueOf(ubicacion.id_ubicacion));
+                    ControlWS.subirFoto(getApplicationContext(), encoded, String.valueOf(ubicacion.id_ubicacion),Comments.this);
                 }
                 break;
         }
