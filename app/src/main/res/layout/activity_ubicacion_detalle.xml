@@ -20,7 +20,8 @@
         android:gravity="center_horizontal"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:text="Nombre: " />
+        android:text="Nombre: "
+        android:fontFamily="sans-serif-smallcaps"/>
 
     <androidx.cardview.widget.CardView
         android:layout_width="match_parent"
@@ -42,23 +43,30 @@
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:text="Titulo Parqueo"
+                    android:fontFamily="monospace"
                     android:textColor="@android:color/black"
-                    android:textSize="15dp"/>
+                    android:textSize="15dp"
+                    android:layout_marginBottom="15dp"/>
 
                 <RatingBar
                     android:id="@+id/ratingBar"
                     android:numStars="5"
                     android:layout_gravity="center_horizontal"
                     android:layout_width="wrap_content"
-                    android:layout_height="wrap_content" />
+                    android:layout_height="wrap_content"
+                    android:layout_marginBottom="15dp"/>
 
                 <Button
                     android:id="@+id/btnSubmitRating"
+                    android:layout_width="160dp"
+                    android:layout_height="match_parent"
                     android:layout_gravity="center_horizontal"
-                    android:text="Puntuar ahora"
+                    android:layout_marginBottom="15dp"
+                    android:background="@drawable/btn_shape"
+                    android:fontFamily="sans-serif-smallcaps"
                     android:onClick="puntuar"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"/>
+                    android:text="Puntuar ahora"
+                    android:textColor="@color/white" />
             </LinearLayout>
         </LinearLayout>
     </androidx.cardview.widget.CardView>
@@ -67,13 +75,20 @@
         android:id="@+id/btnParqueos"
         android:text="Mostrar parqueos disponibles"
         android:onClick="mostrar"
+        android:fontFamily="sans-serif-smallcaps"
+        android:textColor="@color/white"
+        android:background="@drawable/btn_shape"
         android:layout_width="match_parent"
-        android:layout_height="wrap_content"/>
+        android:layout_height="wrap_content"
+        android:layout_marginBottom="15dp" />
     <Button
         android:id="@+id/btnComentarios"
         android:text="Mostrar comentarios"
         android:onClick="mostrar"
         android:layout_width="match_parent"
-        android:layout_height="wrap_content"/>
+        android:layout_height="wrap_content"
+        android:fontFamily="sans-serif-smallcaps"
+        android:textColor="@color/white"
+        android:background="@drawable/btn_shape"/>
 
 </LinearLayout>
