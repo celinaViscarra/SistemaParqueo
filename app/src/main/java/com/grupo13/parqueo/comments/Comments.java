@@ -142,12 +142,23 @@ public class Comments extends AppCompatActivity {
     public void agregarComentario(View v){
         String comentario = texto.getText().toString();
         String ubication = String.valueOf(ubicacion.id_ubicacion);
+        int resultado = -1;
+        String respuesta = "";
 
-        if(comentario != null){
-            ControlWS.subirComentario(getApplicationContext(), ubication, email, comentario);
-        }else{
+        if (comentario.equals(null) || comentario.equals("")) {
+            Log.d("iftrue", "seem to be true");
             String mensaje = "Error al ingresar mensaje";
             Toast.makeText(this, mensaje, Toast.LENGTH_LONG).show();
+        } else {
+            Log.d("iffalse", "seem to be false");
+            ControlWS.subirComentario(getApplicationContext(), ubication, email, comentario);
+            if(resultado==1){
+                respuesta = "Comentario no guardado";
+                Toast.makeText(this, respuesta, Toast.LENGTH_LONG).show();
+            }else{
+                respuesta = "Comentario guardado";
+                Toast.makeText(this, respuesta, Toast.LENGTH_LONG).show();
+            }
         }
         //ControlWS.subirComentario(this, String.valueOf(ubicacion.id_ubicacion),email, texto.getText().toString());
     }
