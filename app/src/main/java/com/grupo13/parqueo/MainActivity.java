@@ -304,7 +304,7 @@ public class MainActivity extends AppCompatActivity implements OnMapReadyCallbac
     @Override
     public boolean onMarkerClick(final Marker marker) {
         Ubicacion ubicacion = (Ubicacion) marker.getTag();
-        Intent intent = new Intent(this, Comments.class);
+        Intent intent = new Intent(this, UbicacionDetalleActivity.class);
         intent.putExtra("UBICACION", ubicacion);
         startActivity(intent);
         return true;
@@ -334,7 +334,6 @@ public class MainActivity extends AppCompatActivity implements OnMapReadyCallbac
     }
     // Permitir escuchar por el microfono
     private static  final int RECOGNIZE_SPEACH_CODE = 100;
-    private static final int REQUEST_IMAGE_CAPTURE = 200;
 
     public void getVoice(View view){
 
@@ -349,12 +348,6 @@ public class MainActivity extends AppCompatActivity implements OnMapReadyCallbac
         }
     }
 
-    public void photo(View view){
-        Intent takePictureIntent = new Intent(MediaStore.ACTION_IMAGE_CAPTURE);
-        if (takePictureIntent.resolveActivity(getPackageManager()) != null) {
-            startActivityForResult(takePictureIntent, REQUEST_IMAGE_CAPTURE);
-        }
-    }
 
     @Override
     protected void onActivityResult(int requestCode, int resultCode, @Nullable Intent data) {
@@ -395,17 +388,6 @@ public class MainActivity extends AppCompatActivity implements OnMapReadyCallbac
                         Log.e("TTS", "Error in converting Text to Speech!");
                     }
             }
-                break;
-            case REQUEST_IMAGE_CAPTURE:
-                if (resultCode == RESULT_OK && data != null) {
-                    Bundle extras = data.getExtras();
-                    Bitmap imageBitmap = (Bitmap) extras.get("data");
-                    ByteArrayOutputStream byteArrayOutputStream = new ByteArrayOutputStream();
-                    imageBitmap.compress(Bitmap.CompressFormat.JPEG, 100, byteArrayOutputStream);
-                    byte[] byteArray = byteArrayOutputStream .toByteArray();
-                    String encoded = Base64.encodeToString(byteArray, Base64.DEFAULT);
-                    ControlWS.subirFoto(getApplicationContext(), encoded);
-                }
                 break;
         }
     }

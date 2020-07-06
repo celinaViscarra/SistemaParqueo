@@ -4,7 +4,8 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    tools:context=".comments.Comments">
+    tools:context=".MainActivity">
+
 
     <LinearLayout
         android:layout_width="match_parent"
@@ -16,6 +17,9 @@
             android:layout_width="match_parent"
             android:layout_height="match_parent"
             android:id="@+id/recycler_view"/>
+
+
+
     </LinearLayout>
 
     <RelativeLayout
@@ -29,13 +33,13 @@
         <EditText
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:padding="4dp"
+            android:padding="2dp"
             android:background="@null"
-            android:layout_marginRight="110dp"
+            android:layout_marginRight="50dp"
             android:layout_marginLeft="5dp"
             android:layout_centerVertical="true"
             android:hint="Add a comment..."
-            android:textSize="15sp"
+            android:textSize="14sp"
             android:id="@+id/comment"/>
 
         <ImageView
@@ -44,9 +48,7 @@
             android:layout_centerVertical="true"
             android:src="@drawable/ic_checkmark"
             android:id="@+id/ivPostComment"
-            android:layout_alignParentRight="true"
-            android:onClick="agregarComentario"
-            />
+            android:layout_alignParentRight="true"/>
 
         <ImageView
             android:id="@+id/ivCamera"
@@ -57,6 +59,7 @@
             android:layout_marginRight="60dp"
             android:layout_toLeftOf="@id/ivPostComment"
             android:src="@drawable/ic_camera" />
+
     </RelativeLayout>
 
 </RelativeLayout>

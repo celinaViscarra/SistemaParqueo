@@ -20,6 +20,7 @@ import com.android.volley.toolbox.JsonObjectRequest;
 import com.android.volley.toolbox.StringRequest;
 import com.google.android.gms.auth.api.signin.GoogleSignInAccount;
 import com.google.gson.Gson;
+import com.google.gson.GsonBuilder;
 import com.google.gson.reflect.TypeToken;
 import com.grupo13.parqueo.modelo.Calificacion;
 import com.grupo13.parqueo.modelo.Comentario;
@@ -33,9 +34,13 @@ import org.json.JSONException;
 import org.json.JSONObject;
 
 import java.lang.reflect.Type;
+import java.text.ParseException;
+import java.text.SimpleDateFormat;
 import java.util.ArrayList;
+import java.util.Calendar;
 import java.util.HashMap;
 import java.util.List;
+import java.util.Locale;
 import java.util.Map;
 
 public class ControlWS {
@@ -124,33 +129,37 @@ public class ControlWS {
                 Request.Method.GET,
                 url+"imagen",
                 response -> {
-                    //Gson gson = new Gson();
-                    //Type listType = new TypeToken<List<Imagen>>(){}.getType();
-                    //List<Imagen> imagenes = gson.fromJson(response, listType);
                     List<Imagen> imagenes = new ArrayList<>();
                     try {
                         JSONArray arrayImagenes = new JSONArray(response);
                         for(int i=0; i<arrayImagenes.length();i++){
-                            JSONObject obj = arrayImagenes.getJSONObject(0);
+                            JSONObject obj = arrayImagenes.getJSONObject(i);
                             Imagen pivote = new Imagen();
                             pivote.id_imagen = Integer.parseInt(obj.getString("id_imagen"));
-                            pivote.id_ubicacion = obj.isNull("id_ubicacion") ? null : Integer.parseInt(obj.getString("id_ubicacion"));
-                            pivote.id_comentario = obj.isNull("id_comentario") ? null : Integer.parseInt(obj.getString("id_comentario"));
-                            //alendar cal = Calendar.getInstance();
-
+                            Log.v("Ingresando: ", String.valueOf(pivote.id_imagen));
+                            String id_ubi = obj.getString("id_ubicacion");
+                            String id_coment = obj.getString("id_comentario");
+                            if(!id_ubi.equals("null")) pivote.id_ubicacion = Integer.parseInt(id_ubi);
+                            if(!id_coment.equals("null")) pivote.id_comentario = Integer.parseInt(id_coment);
+                            //pivote.id_ubicacion = obj.isNull("id_ubicacion") ? null : Integer.parseInt(obj.getString("id_ubicacion"));
+                            //pivote.id_comentario = obj.isNull("id_comentario") ? null : Integer.parseInt(obj.getString("id_comentario"));
+                            pivote.fecha_imagen = Calendar.getInstance();
+                            SimpleDateFormat dateParser = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss", Locale.ENGLISH);
+                            pivote.fecha_imagen.setTime(dateParser.parse(obj.getString("fecha_imagen")));
+                            pivote.filename = obj.getString("filename");
+                            imagenes.add(pivote);
                         }
-                    } catch (JSONException e) {
+                    } catch (JSONException | ParseException e) {
                         Toast.makeText(context, "Error en parseo JSON", Toast.LENGTH_SHORT).show();
                     }
                     helper.imagenDao().insertarImagenes(imagenes);
                 },
                 error -> onErrorResponse(error,context)
         );
-        //requestQueue.add(requestImagenes);
-
+        requestQueue.add(requestImagenes);
     }
 
-    public static void subirFoto(Context context, String foto) {
+    public static void subirFoto(Context context, String foto, String ubicacion) {
         String url = "https://eisi.fia.ues.edu.sv/eisi13/parqueows/index.php/api/imagenupload";
 
         RequestQueue requestQueue;
@@ -178,7 +187,7 @@ public class ControlWS {
             @Override
             protected Map<String, String> getParams() throws AuthFailureError {
                 Map<String, String> params = new HashMap<String, String>();
-                params.put("id_ubicacion", "5");
+                params.put("id_ubicacion", ubicacion);
                 params.put("extension", "jpg");
                 params.put("base64", foto);
                 return params;

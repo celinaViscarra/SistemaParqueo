@@ -18,6 +18,9 @@ public interface ComentarioDao {
     @Query("SELECT * FROM Comentario WHERE id_comentario=:id_comentario")
     Comentario consultarComentario(int id_comentario);
 
+    @Query("SELECT * FROM Comentario WHERE id_ubicacion=:id_ubicacion")
+    List<Comentario> obtenerComentariosPorUbicacion(int id_ubicacion);
+
     @Insert
     long insertarComentario(Comentario comentario);
 
