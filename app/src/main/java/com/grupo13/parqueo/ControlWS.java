@@ -242,4 +242,41 @@ public class ControlWS {
             //Toast.makeText(context, "404",Toast.LENGTH_SHORT).show();
         }
     }
+
+    public static void subirComentario(Context context, String ubicacion, String idUsuario, String texto){
+        String url = "https://eisi.fia.ues.edu.sv/eisi13/parqueows/index.php/api/comentario";
+
+        RequestQueue requestQueue;
+        Cache cache = new DiskBasedCache(context.getCacheDir(), 1024 * 1024); // 1MB cap
+        Network network = new BasicNetwork(new HurlStack());
+        requestQueue = new RequestQueue(cache, network);
+        requestQueue.start();
+        String respuesta = "";
+        StringRequest comentario = new StringRequest(
+                Request.Method.PUT,
+                url,
+                new Response.Listener<String>() {
+                    @Override
+                    public void onResponse(String response) {
+                        Log.d("COMENTARIO ENVIADO", response);
+                    }
+                },
+                new Response.ErrorListener() {
+                    @Override
+                    public void onErrorResponse(VolleyError error) {
+                        Log.d("FALLO CONEXION", error.toString());
+                    }
+                }
+        ){
+            @Override
+            protected Map<String, String> getParams() throws AuthFailureError {
+                Map<String, String> params = new HashMap<String, String>();
+                params.put("id_usuario", idUsuario);
+                params.put("id_ubicacion", ubicacion);
+                params.put("texto", texto);
+                return params;
+            }
+        };
+        requestQueue.add(comentario);
+    }
 }
