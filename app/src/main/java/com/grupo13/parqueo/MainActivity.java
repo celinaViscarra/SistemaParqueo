@@ -364,7 +364,7 @@ public class MainActivity extends AppCompatActivity implements OnMapReadyCallbac
                 if (resultCode == RESULT_OK && data != null){
                     List<String> palabras = data.getStringArrayListExtra(RecognizerIntent.EXTRA_RESULTS);
 
-                    ReconocimientoVoz voz = new ReconocimientoVoz(palabras.get(0).toLowerCase());
+                    ReconocimientoVoz voz = new ReconocimientoVoz(palabras.get(0).toLowerCase(), getApplicationContext());
                     String respuesta = null;
 
                     if (voz.esComandoValido()){
@@ -378,7 +378,7 @@ public class MainActivity extends AppCompatActivity implements OnMapReadyCallbac
 
                             if(masCercana != null){
                                 mMap.moveCamera(CameraUpdateFactory.newLatLngZoom( new LatLng(masCercana.latitud, masCercana.longitud), 17));
-                                respuesta = getString(R.string.distancia) + voz.getDistanciaMetros(miUbicacion, masCercana) + getString(R.string.metros);
+                                respuesta = getString(R.string.distancia) + voz.getDistanciaMetros(miUbicacion, masCercana) + getString(R.string.metros) + ". " + masCercana.nombre_ubicacion;
                             } else{
                                 respuesta = getString(R.string.problema);
                             }
