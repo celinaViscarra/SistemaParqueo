@@ -13,6 +13,7 @@ import com.bumptech.glide.Glide;
 import com.grupo13.parqueo.comments.Comments;
 import com.grupo13.parqueo.modelo.Imagen;
 import com.grupo13.parqueo.modelo.Ubicacion;
+import com.grupo13.parqueo.parqueos.ParqueoListActivity;
 
 import butterknife.BindView;
 import butterknife.ButterKnife;
@@ -50,7 +51,7 @@ public class UbicacionDetalleActivity extends AppCompatActivity {
                 break;
             }
             case R.id.btnParqueos:{
-                //TODO: Mostrar parqueos disponibles
+                intent = new Intent(this, ParqueoListActivity.class);
                 break;
             }
         }

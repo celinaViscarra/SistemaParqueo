@@ -25,11 +25,11 @@ public class Parqueo {
     @NonNull
     public String nombre_parqueo;
     @NonNull
-    public boolean ocupado;
+    public int ocupado;
 
     public Parqueo(){}
 
-    public Parqueo(int id_parqueo, int id_ubicacion, String nombre_parqueo, boolean ocupado){
+    public Parqueo(int id_parqueo, int id_ubicacion, String nombre_parqueo, int ocupado){
         this.id_parqueo = id_parqueo;
         this.id_ubicacion = id_ubicacion;
         this.nombre_parqueo = nombre_parqueo;
