@@ -18,6 +18,9 @@ public interface ParqueoDao {
     @Query("SELECT * FROM Parqueo WHERE id_parqueo=:id_parqueo")
     Parqueo consultarParqueo(int id_parqueo);
 
+    @Query("SELECT * FROM Parqueo WHERE id_ubicacion=:id_ubicacion")
+    List<Parqueo> obtenerParqueosPorUbicacion(int id_ubicacion);
+
     @Insert
     long insertarParqueo(Parqueo parqueo);
 
