@@ -26,8 +26,6 @@ import android.widget.RelativeLayout;
 
 import androidx.appcompat.app.ActionBar;
 import androidx.appcompat.widget.SearchView;
-
-import android.widget.TextView;
 import android.widget.Toast;
 
 import androidx.annotation.NonNull;
@@ -150,6 +148,8 @@ public class MainActivity extends AppCompatActivity implements OnMapReadyCallbac
             }
         });
 
+        getSupportActionBar().setDisplayOptions(ActionBar.DISPLAY_SHOW_CUSTOM);
+        getSupportActionBar().setCustomView(R.layout.abs_layout);
     }
 
     @Override
@@ -171,7 +171,6 @@ public class MainActivity extends AppCompatActivity implements OnMapReadyCallbac
         }
         //Esto activa el gps
         mMap.setMyLocationEnabled(true);
-        mMap.getUiSettings().setMyLocationButtonEnabled(false);
         gpsTrack();
 
         //Dejo esto por si queremos cambiar automaticamente la localizacion.

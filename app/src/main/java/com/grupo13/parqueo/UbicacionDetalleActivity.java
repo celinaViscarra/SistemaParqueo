@@ -1,5 +1,6 @@
 package com.grupo13.parqueo;
 
+import androidx.appcompat.app.ActionBar;
 import androidx.appcompat.app.AppCompatActivity;
 
 import android.content.Intent;
@@ -65,6 +66,9 @@ public class UbicacionDetalleActivity extends AppCompatActivity {
         Imagen imagen = helper.imagenDao().consultarImagenPorUbicacion(selected.id_ubicacion);
         if(imagen!=null)
             Glide.with(this).load(ControlWS.ASSETS_URL + imagen.filename).error(R.mipmap.ic_parking).into(imgUbicacion);
+
+        getSupportActionBar().setDisplayOptions(ActionBar.DISPLAY_SHOW_CUSTOM);
+        getSupportActionBar().setCustomView(R.layout.abs_layout);
     }
 
     public void mostrar(View v){
