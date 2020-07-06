@@ -17,7 +17,9 @@ import com.android.volley.toolbox.BasicNetwork;
 import com.android.volley.toolbox.DiskBasedCache;
 import com.android.volley.toolbox.HurlStack;
 import com.android.volley.toolbox.JsonObjectRequest;
+import com.android.volley.toolbox.RequestFuture;
 import com.android.volley.toolbox.StringRequest;
+import com.android.volley.toolbox.Volley;
 import com.google.android.gms.auth.api.signin.GoogleSignInAccount;
 import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
@@ -42,10 +44,13 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Locale;
 import java.util.Map;
+import java.util.concurrent.ExecutionException;
+import java.util.concurrent.TimeUnit;
 
 public class ControlWS {
     public static final String ASSETS_URL = "https://eisi.fia.ues.edu.sv/eisi13/parqueows/assets/";
-    public static void traerDatos(Context context, MainActivity main){
+
+    public static void traerDatos(Context context, MainActivity main) {
         String url = "https://eisi.fia.ues.edu.sv/eisi13/parqueows/index.php/api/";
         ControlBD helper = ControlBD.getInstance(context);
         RequestQueue requestQueue;
@@ -59,105 +64,66 @@ public class ControlWS {
         //Iniciar la cola
         helper.vaciarBD();
         requestQueue.start();
-        //TODO: Agregarle una forma de revisar si tiene internet.
-        //Si, se pudo hacer mas corto este proceso pero no tenia ganas :v
-        //Cargamos la lista de ubicaciones
-        String respuesta = "";
-        StringRequest requestUbicaciones = new StringRequest(
-                Request.Method.GET,
-                url+"ubicacion",
-                response -> {
-                    Gson gson = new Gson();
-                    Type listType = new TypeToken<List<Ubicacion>>(){}.getType();
-                    List<Ubicacion> ubicaciones = gson.fromJson(response, listType);
-                    helper.ubicacionDao().insertarUbicaciones(ubicaciones);
-                    main.cargarUbicaciones();
-                },
-                error -> onErrorResponse(error,context)
-        );
-        requestQueue.add(requestUbicaciones);
-        StringRequest requestParqueos = new StringRequest(
-                Request.Method.GET,
-                url+"parqueo",
-                response -> {
-                    Gson gson = new Gson();
-                    Type listType = new TypeToken<List<Parqueo>>(){}.getType();
-                    List<Parqueo> parqueos = gson.fromJson(response, listType);
-                    helper.parqueoDao().insertarParqueos(parqueos);
-                },
-                error -> onErrorResponse(error,context)
-        );
-        requestQueue.add(requestParqueos);
-        StringRequest requestUsuarios = new StringRequest(
-                Request.Method.GET,
-                url+"usuario",
-                response -> {
-                    Gson gson = new Gson();
-                    Type listType = new TypeToken<List<Usuario>>(){}.getType();
-                    List<Usuario> usuarios = gson.fromJson(response, listType);
-                    helper.usuarioDao().insertarUsuarios(usuarios);
-                },
-                error -> onErrorResponse(error,context)
-        );
-        requestQueue.add(requestUsuarios);
-        StringRequest requestComentarios = new StringRequest(
-                Request.Method.GET,
-                url+"comentario",
-                response -> {
-                    Gson gson = new Gson();
-                    Type listType = new TypeToken<List<Comentario>>(){}.getType();
-                    List<Comentario> comentarios = gson.fromJson(response, listType);
-                    helper.comentarioDao().insertarComentarios(comentarios);
-                },
-                error -> onErrorResponse(error,context)
-        );
-        requestQueue.add(requestComentarios);
+        JsonObjectRequest requestAllData = new JsonObjectRequest
+                (Request.Method.GET, url + "alldata", null, new Response.Listener<JSONObject>() {
+                    @Override
+                    public void onResponse(JSONObject response) {
+                        try {
+                            Gson gson = new Gson();
+                            Type listType = new TypeToken<List<Ubicacion>>() {}.getType();
+                            //Primero van las ubicaciones
+                            List<Ubicacion> ubicaciones = gson.fromJson(response.getJSONArray("ubicacion").toString(), listType);
+                            helper.ubicacionDao().insertarUbicaciones(ubicaciones);
+                            main.cargarUbicaciones();
+                            //Despues van los parqueos
+                            listType = new TypeToken<List<Parqueo>>() {}.getType();
+                            List<Parqueo> parqueos = gson.fromJson(response.getJSONArray("parqueo").toString(), listType);
+                            helper.parqueoDao().insertarParqueos(parqueos);
 
-        StringRequest requestCalificaciones = new StringRequest(
-                Request.Method.GET,
-                url+"calificacion",
-                response -> {
-                    Gson gson = new Gson();
-                    Type listType = new TypeToken<List<Calificacion>>(){}.getType();
-                    List<Calificacion> calificaciones = gson.fromJson(response, listType);
-                    helper.calificacionDao().insertarCalificaciones(calificaciones);
-                },
-                error -> onErrorResponse(error,context)
-        );
-        requestQueue.add(requestCalificaciones);
+                            listType = new TypeToken<List<Usuario>>() {}.getType();
+                            List<Usuario> users = gson.fromJson(response.getJSONArray("usuario").toString(), listType);
+                            helper.usuarioDao().insertarUsuarios(users);
 
-        StringRequest requestImagenes = new StringRequest(
-                Request.Method.GET,
-                url+"imagen",
-                response -> {
-                    List<Imagen> imagenes = new ArrayList<>();
-                    try {
-                        JSONArray arrayImagenes = new JSONArray(response);
-                        for(int i=0; i<arrayImagenes.length();i++){
-                            JSONObject obj = arrayImagenes.getJSONObject(i);
-                            Imagen pivote = new Imagen();
-                            pivote.id_imagen = Integer.parseInt(obj.getString("id_imagen"));
-                            Log.v("Ingresando: ", String.valueOf(pivote.id_imagen));
-                            String id_ubi = obj.getString("id_ubicacion");
-                            String id_coment = obj.getString("id_comentario");
-                            if(!id_ubi.equals("null")) pivote.id_ubicacion = Integer.parseInt(id_ubi);
-                            if(!id_coment.equals("null")) pivote.id_comentario = Integer.parseInt(id_coment);
-                            //pivote.id_ubicacion = obj.isNull("id_ubicacion") ? null : Integer.parseInt(obj.getString("id_ubicacion"));
-                            //pivote.id_comentario = obj.isNull("id_comentario") ? null : Integer.parseInt(obj.getString("id_comentario"));
-                            pivote.fecha_imagen = Calendar.getInstance();
-                            SimpleDateFormat dateParser = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss", Locale.ENGLISH);
-                            pivote.fecha_imagen.setTime(dateParser.parse(obj.getString("fecha_imagen")));
-                            pivote.filename = obj.getString("filename");
-                            imagenes.add(pivote);
+                            listType = new TypeToken<List<Comentario>>() {}.getType();
+                            List<Comentario> comentarios = gson.fromJson(response.getJSONArray("comentario").toString(), listType);
+                            helper.comentarioDao().insertarComentarios(comentarios);
+
+                            listType = new TypeToken<List<Calificacion>>() {}.getType();
+                            List<Calificacion> calificaciones = gson.fromJson(response.getJSONArray("calificacion").toString(), listType);
+                            helper.calificacionDao().insertarCalificaciones(calificaciones);
+
+                            JSONArray arrayImagenes = response.getJSONArray("imagen");
+                            List<Imagen> imagenes = new ArrayList<>();
+                            for(int i=0; i<arrayImagenes.length();i++){
+                                JSONObject obj = arrayImagenes.getJSONObject(i);
+                                Imagen pivote = new Imagen();
+                                pivote.id_imagen = Integer.parseInt(obj.getString("id_imagen"));
+                                Log.v("Ingresando: ", String.valueOf(pivote.id_imagen));
+                                String id_ubi = obj.getString("id_ubicacion");
+                                String id_coment = obj.getString("id_comentario");
+                                if(!id_ubi.equals("null")) pivote.id_ubicacion = Integer.parseInt(id_ubi);
+                                if(!id_coment.equals("null")) pivote.id_comentario = Integer.parseInt(id_coment);
+                                //pivote.id_ubicacion = obj.isNull("id_ubicacion") ? null : Integer.parseInt(obj.getString("id_ubicacion"));
+                                //pivote.id_comentario = obj.isNull("id_comentario") ? null : Integer.parseInt(obj.getString("id_comentario"));
+                                pivote.fecha_imagen = Calendar.getInstance();
+                                SimpleDateFormat dateParser = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss", Locale.ENGLISH);
+                                pivote.fecha_imagen.setTime(dateParser.parse(obj.getString("fecha_imagen")));
+                                pivote.filename = obj.getString("filename");
+                                imagenes.add(pivote);
+                            }
+                            helper.imagenDao().insertarImagenes(imagenes);
+                        } catch (JSONException | ParseException e) {
+                            e.printStackTrace();
                         }
-                    } catch (JSONException | ParseException e) {
-                        Toast.makeText(context, "Error en parseo JSON", Toast.LENGTH_SHORT).show();
                     }
-                    helper.imagenDao().insertarImagenes(imagenes);
-                },
-                error -> onErrorResponse(error,context)
-        );
-        requestQueue.add(requestImagenes);
+                }, new Response.ErrorListener() {
+                    @Override
+                    public void onErrorResponse(VolleyError error) {
+                        // TODO: Handle error
+                    }
+                });
+        requestQueue.add(requestAllData);
+
     }
 
     public static void subirFoto(Context context, String foto, String ubicacion) {
@@ -184,7 +150,7 @@ public class ControlWS {
                         Log.d("POTOGRAFIA-FALLO", error.toString());
                     }
                 }
-        ){
+        ) {
             @Override
             protected Map<String, String> getParams() throws AuthFailureError {
                 Map<String, String> params = new HashMap<String, String>();
@@ -222,7 +188,7 @@ public class ControlWS {
                         Log.d("REGISTRO", error.toString());
                     }
                 }
-        ){
+        ) {
             @Override
             protected Map<String, String> getParams() throws AuthFailureError {
                 Map<String, String> params = new HashMap<String, String>();
@@ -236,15 +202,15 @@ public class ControlWS {
 
     }
 
-    public static void onErrorResponse(VolleyError error,Context context){
+    public static void onErrorResponse(VolleyError error, Context context) {
         NetworkResponse response = error.networkResponse;
-        if(response != null && response.statusCode == 404){
+        if (response != null && response.statusCode == 404) {
             //Con esto detectamos errores 404 que vengan del WS
             //Toast.makeText(context, "404",Toast.LENGTH_SHORT).show();
         }
     }
 
-    public static void subirComentario(Context context, String ubicacion, String usuario, String texto){
+    public static void subirComentario(Context context, String ubicacion, String usuario, String texto) {
         String url = "https://eisi.fia.ues.edu.sv/eisi13/parqueows/index.php/api/comentario";
 
         RequestQueue requestQueue;
@@ -268,7 +234,7 @@ public class ControlWS {
                         Log.d("FALLO CONEXION", error.toString());
                     }
                 }
-        ){
+        ) {
             @Override
             protected Map<String, String> getParams() throws AuthFailureError {
                 Map<String, String> params = new HashMap<String, String>();
