@@ -81,7 +81,7 @@ public class    RecyclerViewAdapter extends RecyclerView.Adapter<RecyclerViewAda
             image = itemView.findViewById(R.id.comment_profile_image);
             parentLayout = itemView.findViewById(R.id.parent_layout);
             imageName = itemView.findViewById(R.id.comment_username);
-            imageComment = itemView.findViewById(R.id.comment);
+            imageComment = itemView.findViewById(R.id.comment_user);
 
         }
     }
