@@ -304,7 +304,7 @@ public class MainActivity extends AppCompatActivity implements OnMapReadyCallbac
     @Override
     public boolean onMarkerClick(final Marker marker) {
         Ubicacion ubicacion = (Ubicacion) marker.getTag();
-        Intent intent = new Intent(this, Comments.class);
+        Intent intent = new Intent(this, UbicacionDetalleActivity.class);
         intent.putExtra("UBICACION", ubicacion);
         startActivity(intent);
         return true;
