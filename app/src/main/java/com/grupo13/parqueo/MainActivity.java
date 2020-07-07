@@ -187,6 +187,7 @@ public class MainActivity extends AppCompatActivity implements OnMapReadyCallbac
         });*/
         mMap.setMapStyle(MapStyleOptions.loadRawResourceStyle(this, R.raw.style_json));
         ControlWS.traerDatos(this,MainActivity.this);
+        mMap.getUiSettings().setMyLocationButtonEnabled(false);
         //cargarUbicaciones();
         //Esta parte es para mover los botones xxd
         /*@SuppressLint("ResourceType") View zoomControls = mapFragment.getView().findViewById(0x1);
