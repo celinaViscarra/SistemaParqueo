@@ -69,6 +69,7 @@ import com.grupo13.parqueo.utilidades.PermisoService;
 import com.grupo13.parqueo.utilidades.ReconocimientoVoz;
 
 import java.io.ByteArrayOutputStream;
+import java.io.NotSerializableException;
 import java.io.Serializable;
 import java.lang.reflect.Type;
 import java.util.ArrayList;
@@ -238,7 +239,7 @@ public class MainActivity extends AppCompatActivity implements OnMapReadyCallbac
             public boolean onMenuItemActionExpand(MenuItem item) {
                 FragmentTransaction txn = getSupportFragmentManager().beginTransaction();
                 ArrayList<Ubicacion> ubicaciones = (ArrayList<Ubicacion>) helper.ubicacionDao().obtenerUbicaciones();
-                current = UbicacionListaFragment.newInstance(ubicaciones, MainActivity.this);
+                current = UbicacionListaFragment.newInstance(ubicaciones);
                 txn.replace(R.id.fragmento, current);
                 txn.commit();
                 frameLayout.setVisibility(View.VISIBLE);
@@ -267,18 +268,22 @@ public class MainActivity extends AppCompatActivity implements OnMapReadyCallbac
 
     @Override
     public boolean onQueryTextChange(String newText) {
-        ArrayList<Ubicacion> elementosQuery = new ArrayList<>();
-        ArrayList<Ubicacion> ubicaciones = (ArrayList<Ubicacion>) helper.ubicacionDao().obtenerUbicaciones();
-        for(Ubicacion pivote: ubicaciones)
-            if(pivote.nombre_ubicacion.contains(newText))
-                elementosQuery.add(pivote);
 
-        FragmentTransaction txn;
-        txn = getSupportFragmentManager().beginTransaction();
-        current = UbicacionListaFragment.newInstance(elementosQuery, MainActivity.this);
-        txn.replace(R.id.fragmento, current);
-        txn.commit();
+        try{
+            ArrayList<Ubicacion> elementosQuery = new ArrayList<>();
+            ArrayList<Ubicacion> ubicaciones = (ArrayList<Ubicacion>) helper.ubicacionDao().obtenerUbicaciones();
+            for(Ubicacion pivote: ubicaciones)
+                if(pivote.nombre_ubicacion.contains(newText))
+                    elementosQuery.add(pivote);
 
+            FragmentTransaction txn;
+            txn = getSupportFragmentManager().beginTransaction();
+            current = UbicacionListaFragment.newInstance(elementosQuery);
+            txn.replace(R.id.fragmento, current);
+            txn.commit();
+        }catch (RuntimeException e){
+            Log.e("No serializo","equisde");
+        }
         return false;
     }
 
@@ -310,10 +315,11 @@ public class MainActivity extends AppCompatActivity implements OnMapReadyCallbac
     }
     @Override
     public boolean onMarkerClick(final Marker marker) {
-        Ubicacion ubicacion = (Ubicacion) marker.getTag();
-        Intent intent = new Intent(this, UbicacionDetalleActivity.class);
-        intent.putExtra("UBICACION", ubicacion);
-        startActivity(intent);
+            Ubicacion ubicacion = (Ubicacion) marker.getTag();
+            Intent intent = new Intent(this, UbicacionDetalleActivity.class);
+            intent.putExtra("UBICACION", ubicacion);
+            startActivity(intent);
+
         return true;
     }
     public void cargarUbicaciones(){

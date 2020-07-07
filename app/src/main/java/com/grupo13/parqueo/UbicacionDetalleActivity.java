@@ -24,6 +24,8 @@ import com.grupo13.parqueo.modelo.Imagen;
 import com.grupo13.parqueo.modelo.Ubicacion;
 import com.grupo13.parqueo.parqueos.ParqueoListActivity;
 
+import java.io.Serializable;
+
 import butterknife.BindView;
 import butterknife.ButterKnife;
 

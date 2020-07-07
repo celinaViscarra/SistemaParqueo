@@ -15,6 +15,7 @@ import android.widget.Toast;
 
 import com.grupo13.parqueo.modelo.Ubicacion;
 
+import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -24,17 +25,15 @@ public class UbicacionListaFragment extends Fragment {
     private static final String ARG_MAIN = "main";
 
     private ArrayList<Ubicacion> paramLista;
-    private MainActivity main;
 
     public UbicacionListaFragment() {
         // Required empty public constructor
     }
 
-    public static UbicacionListaFragment newInstance(ArrayList<Ubicacion> paramLista, MainActivity main) {
+    public static UbicacionListaFragment newInstance(ArrayList<Ubicacion> paramLista) {
         UbicacionListaFragment fragment = new UbicacionListaFragment();
         Bundle args = new Bundle();
         args.putSerializable(ARG_PARAM1, paramLista);
-        args.putSerializable(ARG_MAIN, main);
         fragment.setArguments(args);
         return fragment;
     }
@@ -44,7 +43,6 @@ public class UbicacionListaFragment extends Fragment {
         super.onCreate(savedInstanceState);
         if (getArguments() != null) {
             paramLista = (ArrayList<Ubicacion>) getArguments().getSerializable(ARG_PARAM1);
-            main = (MainActivity) getArguments().getSerializable(ARG_MAIN);
         }
     }
 
@@ -63,7 +61,9 @@ public class UbicacionListaFragment extends Fragment {
             lvLista.setOnItemClickListener(new AdapterView.OnItemClickListener() {
                 @Override
                 public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
-                    main.seleccionarUbi(paramLista.get(position));
+                    ((MainActivity)getActivity()).seleccionarUbi(paramLista.get(position));
+
+
                 }
             });
         }
